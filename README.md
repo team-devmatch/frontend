@@ -7,6 +7,7 @@ React 기반 프론트엔드
 - TailwindCSS
 - Redux Toolkit
 - Axios
+- REST API / GraphQL 연동
 
 ## 주요 기능
 - 축제 목록 / 상세 페이지

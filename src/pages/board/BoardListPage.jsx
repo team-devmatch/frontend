@@ -3,20 +3,34 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPosts } from '../../api/board'
 
+const LIMIT = 5 // 페이지당 게시글 수
+
 const BoardListPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('전체')
   const [posts, setPosts] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
-    getPosts().then(setPosts)
-  }, [])
+    getPosts({ page: currentPage, limit: LIMIT }).then(({ posts, totalCount }) => {
+      setPosts(posts)
+      setTotalCount(totalCount)
+    })
+  }, [currentPage])
 
   const tabs = ['잡담', '후기']
 
   const filtered = activeTab === '전체'
     ? posts
     : posts.filter(p => p.category === activeTab)
+
+  const totalPages = Math.ceil(totalCount / LIMIT)
+
+  const handleTabClick = (tab) => {
+    setActiveTab(prev => prev === tab ? '전체' : tab)
+    setCurrentPage(1) // 탭 변경 시 1페이지로 초기화
+  }
 
   return (
     <div className={styles.wrap}>
@@ -36,7 +50,7 @@ const BoardListPage = () => {
               <button
                 key={tab}
                 className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab(prev => prev === tab ? '전체' : tab)}
+                onClick={() => handleTabClick(tab)}
               >
                 {tab}
               </button>
@@ -85,6 +99,38 @@ const BoardListPage = () => {
             </div>
           ))}
         </div>
+
+        {/* 페이지네이션 */}
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <button
+              className={styles.pageBtn}
+              onClick={() => setCurrentPage(prev => prev - 1)}
+              disabled={currentPage === 1}
+            >
+              〈
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                className={`${styles.pageBtn} ${currentPage === page ? styles.pageBtnActive : ''}`}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              className={styles.pageBtn}
+              onClick={() => setCurrentPage(prev => prev + 1)}
+              disabled={currentPage === totalPages}
+            >
+              〉
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   )

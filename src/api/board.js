@@ -1,8 +1,13 @@
 import { DUMMY_POSTS } from '../data/dummyPosts'
 
-// 게시글 전체 조회
-export const getPosts = async () => {
-  return DUMMY_POSTS
+// 페이지네이션 추가
+export const getPosts = async ({ page = 1, limit = 5 } = {}) => {
+  const start = (page - 1) * limit
+  const end = start + limit
+  return {
+    posts: DUMMY_POSTS.slice(start, end),
+    totalCount: DUMMY_POSTS.length,
+  }
 }
 
 // 게시글 단건 조회

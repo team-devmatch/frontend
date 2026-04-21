@@ -1,6 +1,7 @@
 import styles from './LoginPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import logo from '../../assets/festigo_logo.svg'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -8,7 +9,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
 
   const handleLogin = () => {
-    // 나중에 API 연동
     console.log(email, password)
   }
 
@@ -16,7 +16,7 @@ const LoginPage = () => {
     <div className={styles.wrap}>
       <div className={styles.card}>
         <div className={styles.cardTop}>
-          <div className={styles.logo}>🌸 FestiGo</div>
+          <img src={logo} alt="FestiGo" className={styles.logo} />
         </div>
         <div className={styles.form}>
           <div className={styles.field}>

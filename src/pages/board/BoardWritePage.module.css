@@ -1,0 +1,176 @@
+.wrap {
+  min-height: 100vh;
+  background: #f8f8f8;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.75rem;
+}
+
+/* 필드 */
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* 말머리 탭 */
+.tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.tab {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: #e8638c;
+  color: #fff;
+}
+
+/* 인풋 */
+.input {
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #e8638c;
+  background: #fff;
+}
+
+/* 텍스트에리어 */
+.textarea {
+  width: 100%;
+  height: 160px;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+  line-height: 1.6;
+}
+
+.textarea:focus {
+  border-color: #e8638c;
+  background: #fff;
+}
+
+/* 사진 첨부 */
+.imgUploadBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px dashed #e8e8e8;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.imgUploadBox:hover {
+  border-color: #e8638c;
+  color: #e8638c;
+}
+
+/* 썸네일 */
+.previewList {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.previewItem {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.previewImg {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: #e8638c;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* 등록 버튼 */
+.submitBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #e8638c, #c94070);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}

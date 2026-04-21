@@ -8,7 +8,7 @@
 
 .card {
   width: 100%;
-  max-width: 480px;
+  max-width: 545px;
   background: #fff;
   border-radius: 20px;
   border: 1px solid #eee;
@@ -24,25 +24,25 @@
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 800;
-  color: #1a1a1a;
+  height: 48px;
+  width: auto;
 }
 
 .form {
   padding: 2rem 2.25rem;
 }
 
-.field {
-  margin-bottom: 1.1rem;
-}
-
 .label {
   display: block;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  text-align: left;  /* ← 좌정렬 */
+}
+
+.field {
+  margin-bottom: 1.1rem;
 }
 
 .input {

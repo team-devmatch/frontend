@@ -1,0 +1,89 @@
+.wrap {
+  min-height: 100vh;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.cardTop {
+  background: linear-gradient(135deg, #fff8f0, #fff0f5);
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid #f5e8ef;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.form {
+  padding: 2rem 2.25rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.input {
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 13px;
+  color: #1a1a1a;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #e8638c;
+  background: #fff;
+}
+
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, #e8638c, #c94070);
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.25rem;
+}
+
+.link {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-top: 0.9rem;
+}
+
+.link span {
+  color: #e8638c;
+  font-weight: 700;
+  cursor: pointer;
+}

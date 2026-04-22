@@ -16,5 +16,5 @@ export const login = (credentials) => {
 
 // 내 정보 조회 (기존과 동일)
 export const getMe = () => {
-  return instance.get('/users/me');
+  return instance.get('/users/mypage');
 };

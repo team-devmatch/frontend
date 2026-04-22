@@ -1,6 +1,7 @@
 import styles from './BoardDetailPage.module.css'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../../context/useAuth'
 import {
   getPostById,
   deletePost,
@@ -10,9 +11,11 @@ import {
   toggleLike,
 } from '../../api/board'
 
+
 const BoardDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const [post, setPost] = useState(null)
   const [liked, setLiked] = useState(false)
@@ -21,6 +24,7 @@ const BoardDetailPage = () => {
   const [comments, setComments] = useState([])
   const [editCommentId, setEditCommentId] = useState(null)
   const [editCommentText, setEditCommentText] = useState('')
+  const [selectedImgIndex, setSelectedImgIndex] = useState(null)
 
   useEffect(() => {
     getPostById(id).then(data => {
@@ -46,7 +50,7 @@ const BoardDetailPage = () => {
     if (!comment.trim()) return
     const newComment = await createComment(post.id, {
       id: Date.now(),
-      nickname: '민수',
+      nickname: user?.nickname ?? '익명',
       content: comment,
       time: '방금 전',
       isOwner: true,
@@ -139,10 +143,18 @@ const BoardDetailPage = () => {
           {post.images.length > 0 && (
             <div className={styles.imageList}>
               {post.images.map((src, i) => (
-                <img key={i} src={src} alt={`첨부${i+1}`} className={styles.postImg} />
+                <img
+                  key={i}
+                  src={src}
+                  alt={`첨부${i+1}`}
+                  className={styles.postImg}
+                  style={{ cursor: 'pointer' }}   // ✅ 커서 포인터
+                  onClick={() => setSelectedImgIndex(i)}  // ✅ 클릭 시 모달 열기
+                />
               ))}
             </div>
           )}
+
 
           {/* 좋아요 */}
           <div className={styles.likeRow}>
@@ -234,10 +246,63 @@ const BoardDetailPage = () => {
               </div>
             ))}
           </div>
+          {/* ✅ 이미지 확대 모달 */}
+          {selectedImgIndex !== null && (
+            <div
+              className={styles.imgModalOverlay}
+              onClick={() => setSelectedImgIndex(null)}  // 바깥 클릭 시 닫기
+            >
+              <div
+                className={styles.imgModal}
+                onClick={(e) => e.stopPropagation()}  // 모달 안 클릭 시 닫기 방지
+              >
+                {/* 닫기 버튼 */}
+                <button
+                  className={styles.imgModalClose}
+                  onClick={() => setSelectedImgIndex(null)}
+                >
+                  ✕
+                </button>
+
+                {/* 이미지 */}
+                <img
+                  src={post.images[selectedImgIndex]}
+                  alt="확대 이미지"
+                  className={styles.imgModalImg}
+                />
+
+                {/* 이전/다음 버튼 - 이미지 2장 이상일 때만 */}
+                {post.images.length > 1 && (
+                  <div className={styles.imgModalNav}>
+                    <button
+                      className={styles.imgModalNavBtn}
+                      onClick={() => setSelectedImgIndex(prev =>
+                        prev === 0 ? post.images.length - 1 : prev - 1
+                      )}
+                    >
+                      ◀
+                    </button>
+                    <span className={styles.imgModalCount}>
+                      {selectedImgIndex + 1} / {post.images.length}
+                    </span>
+                    <button
+                      className={styles.imgModalNavBtn}
+                      onClick={() => setSelectedImgIndex(prev =>
+                        prev === post.images.length - 1 ? 0 : prev + 1
+                      )}
+                    >
+                      ▶
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
       </div>
     </div>
+
   )
 }
 

@@ -2,28 +2,27 @@ import styles from './LoginPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../assets/festigo_logo.svg'
-import { login } from '../../api/auth'   // ← 추가
+import { login } from '../../api/auth'
+import { useAuth } from '../../context/useAuth'
 
 const LoginPage = () => {
   const navigate = useNavigate()
+  const { login: authLogin } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')   // ← 추가
+  const [error, setError] = useState('')
 
   const handleLogin = async () => {
     try {
       const res = await login({ email, password })
-      
-      // 대소문자 둘 다 대비
-      const token = (res.headers['authorization'] || res.headers['Authorization'])
-        ?.replace('Bearer ', '')
+      const token = res.data.token
       
       if (!token) {
         setError('토큰을 받아오지 못했습니다.')
         return
       }
       
-      localStorage.setItem('token', token)
+      authLogin(token)   // ✅ AuthProvider가 알아서 저장해줘요
       navigate('/')
     } catch (err) {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')

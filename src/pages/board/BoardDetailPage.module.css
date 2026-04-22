@@ -328,3 +328,65 @@
   color: #333;
   line-height: 1.6;
 }
+
+/* 이미지 확대 모달 */
+.imgModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.imgModal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.imgModalClose {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.imgModalImg {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.imgModalNav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.imgModalNavBtn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.imgModalNavBtn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.imgModalCount {
+  color: #fff;
+  font-size: 14px;
+}

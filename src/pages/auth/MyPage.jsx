@@ -1,10 +1,12 @@
 import styles from './MyPage.module.css'
 import { useState, useEffect } from 'react'   // ← useEffect 추가
 import { useNavigate } from 'react-router-dom'  // ← useNavigate 추가
-import { getMe } from '../../api/auth'          // ← 추가
+import { getMe } from '../../api/auth'
+import { useAuth } from '../../context/useAuth'
 
 const MyPage = () => {
   const navigate = useNavigate()
+  const { logout } = useAuth()
   const [currentPw, setCurrentPw] = useState('')
   const [newPw, setNewPw] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -48,7 +50,7 @@ const MyPage = () => {
   const handleWithdraw = async () => {
     // TODO: 백엔드 회원탈퇴 API 연동 시 여기만 교체
     console.log('회원 탈퇴')
-    localStorage.removeItem('token')   // ← 토큰 삭제
+    logout()   // ✅ AuthProvider가 알아서 삭제해줘요
     setShowModal(false)
     navigate('/login')
   }

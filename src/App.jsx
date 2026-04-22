@@ -21,13 +21,18 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/board" element={<BoardListPage />} />
+
+        <Route path="/board/write" element={
+          <PrivateRoute><BoardWritePage /></PrivateRoute>
+        } />
         <Route path="/board/:id" element={<BoardDetailPage />} />
-        
+
         {/* 로그인 필요 */}
-        <Route path="/mypage" element={<PrivateRoute><MyPage /></PrivateRoute>} />
-        <Route path="/board/write" element={<PrivateRoute><BoardWritePage /></PrivateRoute>} />
-        
-        {/* 기본 경로 → 랜딩페이지 (나중에 LandingPage 컴포넌트로 교체) */}
+        <Route path="/mypage" element={
+          <PrivateRoute><MyPage /></PrivateRoute>
+        } />
+
+        {/* 기본 경로 */}
         <Route path="/" element={<Navigate to="/board" />} />
       </Routes>
     </BrowserRouter>

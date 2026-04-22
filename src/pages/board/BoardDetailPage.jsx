@@ -38,7 +38,12 @@ const BoardDetailPage = () => {
 
   if (!post) return <div className={styles.wrap}>게시글을 찾을 수 없습니다.</div>
 
+  // ✅ 좋아요 → 비회원이면 로그인 페이지로 이동
   const handleLike = async () => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
     const res = await toggleLike(post.id, liked)
     if (res.success) {
       setLiked(!liked)
@@ -46,11 +51,16 @@ const BoardDetailPage = () => {
     }
   }
 
+  // ✅ 댓글 작성 → 비회원이면 로그인 페이지로 이동
   const handleCommentSubmit = async () => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
     if (!comment.trim()) return
     const newComment = await createComment(post.id, {
       id: Date.now(),
-      nickname: user?.nickname ?? '익명',
+      nickname: user.nickname,  // ✅ 익명 제거
       content: comment,
       time: '방금 전',
       isOwner: true,
@@ -115,7 +125,6 @@ const BoardDetailPage = () => {
               <span className={styles.date}>{post.date}</span>
               <span className={styles.views}>조회 {post.views}</span>
             </div>
-            {/* 본인 글일 때만 수정/삭제 */}
             {post.isOwner && (
               <div className={styles.ownerBtns}>
                 <button
@@ -148,13 +157,12 @@ const BoardDetailPage = () => {
                   src={src}
                   alt={`첨부${i+1}`}
                   className={styles.postImg}
-                  style={{ cursor: 'pointer' }}   // ✅ 커서 포인터
-                  onClick={() => setSelectedImgIndex(i)}  // ✅ 클릭 시 모달 열기
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setSelectedImgIndex(i)}
                 />
               ))}
             </div>
           )}
-
 
           {/* 좋아요 */}
           <div className={styles.likeRow}>
@@ -200,7 +208,6 @@ const BoardDetailPage = () => {
                   <div className={styles.commentTop}>
                     <span className={styles.commentNickname}>{c.nickname}</span>
                     <span className={styles.commentTime}>{c.time}</span>
-                    {/* 본인 댓글일 때만 수정/삭제 */}
                     {c.isOwner && (
                       <div className={styles.commentBtns}>
                         <button
@@ -246,32 +253,28 @@ const BoardDetailPage = () => {
               </div>
             ))}
           </div>
-          {/* ✅ 이미지 확대 모달 */}
+
+          {/* 이미지 확대 모달 */}
           {selectedImgIndex !== null && (
             <div
               className={styles.imgModalOverlay}
-              onClick={() => setSelectedImgIndex(null)}  // 바깥 클릭 시 닫기
+              onClick={() => setSelectedImgIndex(null)}
             >
               <div
                 className={styles.imgModal}
-                onClick={(e) => e.stopPropagation()}  // 모달 안 클릭 시 닫기 방지
+                onClick={(e) => e.stopPropagation()}
               >
-                {/* 닫기 버튼 */}
                 <button
                   className={styles.imgModalClose}
                   onClick={() => setSelectedImgIndex(null)}
                 >
                   ✕
                 </button>
-
-                {/* 이미지 */}
                 <img
                   src={post.images[selectedImgIndex]}
                   alt="확대 이미지"
                   className={styles.imgModalImg}
                 />
-
-                {/* 이전/다음 버튼 - 이미지 2장 이상일 때만 */}
                 {post.images.length > 1 && (
                   <div className={styles.imgModalNav}>
                     <button
@@ -302,7 +305,6 @@ const BoardDetailPage = () => {
         </div>
       </div>
     </div>
-
   )
 }
 

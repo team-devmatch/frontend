@@ -1,34 +1,59 @@
 import styles from './MyPage.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'   // ← useEffect 추가
+import { useNavigate } from 'react-router-dom'  // ← useNavigate 추가
+import { getMe } from '../../api/auth'          // ← 추가
 
 const MyPage = () => {
+  const navigate = useNavigate()
   const [currentPw, setCurrentPw] = useState('')
   const [newPw, setNewPw] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [profileImg, setProfileImg] = useState(null)
 
-  // 더미 유저 데이터 (나중에 API 연동)
-  const user = {
-    nickname: '민수',
-    email: 'minsoo@example.com',
-  }
+  // 더미 데이터 → API 연동으로 교체
+  const [user, setUser] = useState({
+    nickname: '',
+    email: '',
+  })
+
+  // 페이지 진입 시 내 정보 불러오기
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await getMe()
+        setUser(res.data)
+      } catch (err) {
+        console.error(err)
+        alert('로그인이 필요합니다.')
+        navigate('/login')
+      }
+    }
+    fetchUser()
+  }, [])
 
   const handleImgChange = (e) => {
     const file = e.target.files[0]
     if (file) setProfileImg(URL.createObjectURL(file))
   }
 
-  const handlePwChange = () => {
-    // TODO: API 연동
+  const handlePwChange = async () => {
+    if (!currentPw || !newPw) return alert('비밀번호를 입력해주세요.')
+    // TODO: 백엔드 비밀번호 변경 API 연동 시 여기만 교체
     console.log('비밀번호 변경:', currentPw, newPw)
+    alert('비밀번호가 변경되었습니다.')
+    setCurrentPw('')
+    setNewPw('')
   }
 
-  const handleWithdraw = () => {
-    // TODO: API 연동
+  const handleWithdraw = async () => {
+    // TODO: 백엔드 회원탈퇴 API 연동 시 여기만 교체
     console.log('회원 탈퇴')
+    localStorage.removeItem('token')   // ← 토큰 삭제
     setShowModal(false)
+    navigate('/login')
   }
 
+  // return 부분은 기존과 동일 (변경 없음)
   return (
     <div className={styles.wrap}>
       <div className={styles.card}>

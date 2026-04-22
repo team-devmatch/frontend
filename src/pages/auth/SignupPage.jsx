@@ -2,6 +2,7 @@ import styles from './SignupPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../assets/festigo_logo.svg'
+import { register } from '../../api/auth'
 
 const SignupPage = () => {
   const navigate = useNavigate()
@@ -9,7 +10,8 @@ const SignupPage = () => {
   const [password, setPassword] = useState('')
   const [passwordCheck, setPasswordCheck] = useState('')
   const [nickname, setNickname] = useState('')
-  const [profileImg, setProfileImg] = useState(null)
+  const [profileImg, setProfileImg] = useState(null)       // 미리보기용 URL
+  const [profileImgFile, setProfileImgFile] = useState(null) // ← 추가! 실제 파일
 
   // 중복 확인
   const [emailChecked, setEmailChecked] = useState(false)
@@ -21,39 +23,59 @@ const SignupPage = () => {
   const passwordMatch = password && passwordCheck && password === passwordCheck
   const passwordNotMatch = password && passwordCheck && password !== passwordCheck
 
-  const handleEmailCheck = () => {
+  const handleEmailCheck = async () => {
     if (!email.trim()) {
       setEmailMsg('이메일을 입력해주세요.')
       setEmailChecked(false)
       return
     }
-    // TODO: API 연동 시 여기만 교체
+    // TODO: 백엔드 연동 시 여기만 교체
     setEmailChecked(true)
     setEmailMsg('사용 가능한 이메일입니다.')
   }
 
-  const handleNicknameCheck = () => {
+  const handleNicknameCheck = async () => {
     if (!nickname.trim()) {
       setNicknameMsg('닉네임을 입력해주세요.')
       setNicknameChecked(false)
       return
     }
-    // TODO: API 연동 시 여기만 교체
+    // TODO: 백엔드 연동 시 여기만 교체
     setNicknameChecked(true)
     setNicknameMsg('사용 가능한 닉네임입니다.')
   }
 
-  const handleSignup = () => {
+  // ← 수정! FormData 방식으로 변경
+  const handleSignup = async () => {
     if (!emailChecked) return alert('이메일 중복확인을 해주세요.')
     if (!nicknameChecked) return alert('닉네임 중복확인을 해주세요.')
     if (!passwordMatch) return alert('비밀번호를 확인해주세요.')
-    // TODO: API 연동
-    console.log(email, password, nickname)
+
+    try {
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('nickname', nickname)
+      if (profileImgFile) {
+        formData.append('profileImage', profileImgFile)
+      }
+
+      await register(formData)
+      alert('회원가입이 완료되었습니다!')
+      navigate('/login')
+    } catch (err) {
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.')
+      console.error(err)
+    }
   }
 
+  // ← 수정! 파일도 따로 저장
   const handleImgChange = (e) => {
     const file = e.target.files[0]
-    if (file) setProfileImg(URL.createObjectURL(file))
+    if (file) {
+      setProfileImg(URL.createObjectURL(file))  // 미리보기
+      setProfileImgFile(file)                   // 실제 파일 저장
+    }
   }
 
   return (
@@ -94,7 +116,7 @@ const SignupPage = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
-                  setEmailChecked(false)  // ↓ 이메일 바뀌면 확인 초기화
+                  setEmailChecked(false)
                   setEmailMsg('')
                 }}
               />
@@ -102,7 +124,6 @@ const SignupPage = () => {
                 중복 확인
               </button>
             </div>
-            {/* 중복 확인 메시지 */}
             {emailMsg && (
               <p className={emailChecked ? styles.feedbackOk : styles.feedbackErr}>
                 {emailChecked ? '✅' : '❌'} {emailMsg}
@@ -151,7 +172,7 @@ const SignupPage = () => {
                 value={nickname}
                 onChange={(e) => {
                   setNickname(e.target.value)
-                  setNicknameChecked(false)  // ↓ 닉네임 바뀌면 확인 초기화
+                  setNicknameChecked(false)
                   setNicknameMsg('')
                 }}
               />
@@ -159,7 +180,6 @@ const SignupPage = () => {
                 중복 확인
               </button>
             </div>
-            {/* 중복 확인 메시지 */}
             {nicknameMsg && (
               <p className={nicknameChecked ? styles.feedbackOk : styles.feedbackErr}>
                 {nicknameChecked ? '✅' : '❌'} {nicknameMsg}

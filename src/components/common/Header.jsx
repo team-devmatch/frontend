@@ -17,16 +17,11 @@ const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // 🔥 상단에서는 항상 보이게
       if (currentScrollY < 100) {
         setIsVisible(true);
-      }
-      // 🔥 아래로 스크롤 → 숨김
-      else if (currentScrollY > lastScrollY) {
+      } else if (currentScrollY > lastScrollY) {
         setIsVisible(false);
-      }
-      // 🔥 위로 스크롤 → 보임
-      else {
+      } else {
         setIsVisible(true);
       }
 
@@ -65,7 +60,7 @@ const Header = () => {
               <Link to="/login">로그인</Link>
             </li>
             <li>
-              <Link to="/register">회원가입</Link>
+              <Link to="/signup">회원가입</Link>
             </li>
           </ul>
         </div>

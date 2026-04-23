@@ -16,13 +16,20 @@ const LoginPage = () => {
     try {
       const res = await login({ email, password })
       const token = res.data.token
-      
+
       if (!token) {
         setError('토큰을 받아오지 못했습니다.')
         return
       }
-      
-      authLogin(token)   // ✅ AuthProvider가 알아서 저장해줘요
+
+      // ✅ 현재 : 토큰 + 임시 닉네임 저장
+      // 🔄 백엔드 연동 후 : 아래 주석으로 교체하세요!
+      // const nickname = res.data.user.nickname  // ← 서버에서 받은 닉네임
+      // authLogin(token, nickname)
+
+      const nickname = email.split('@')[0]  // ← 임시 닉네임 (이메일 앞부분)
+      authLogin(token, nickname)
+
       navigate('/')
     } catch (err) {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')
@@ -57,7 +64,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p className={styles.error}>{error}</p>}  {/* ← 추가 */}
+          {error && <p className={styles.error}>{error}</p>}
           <button className={styles.btn} onClick={handleLogin}>
             로그인
           </button>

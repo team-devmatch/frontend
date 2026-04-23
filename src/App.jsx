@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/useAuth'   // ✅ 추가
+import Header from './components/common/Header'
 import LoginPage from './pages/auth/LoginPage'
 import SignupPage from './pages/auth/SignupPage'
 import MyPage from './pages/auth/MyPage'
@@ -16,6 +17,7 @@ const PrivateRoute = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
+      <Header /> 
       <Routes>
         {/* 누구나 접근 가능 */}
         <Route path="/login" element={<LoginPage />} />

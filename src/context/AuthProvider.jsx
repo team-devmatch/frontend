@@ -2,38 +2,37 @@ import { useState } from 'react'
 import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }) => {
+
+  // ✅ 현재 : 토큰 + 닉네임 localStorage에서 불러오기
+  // 🔄 백엔드 연동 후 : const [user, setUser] = useState(null) 로 바꾸고
+  //    앱 시작 시 토큰으로 유저 정보 API 호출해서 불러오기
+  //    예시) GET /api/auth/me → { nickname, email, ... } 받아서 setUser
   const [user, setUser] = useState(
-    localStorage.getItem('token') || null   // ✅ 새로고침해도 토큰 유지
+    localStorage.getItem('token')
+      ? {
+          token: localStorage.getItem('token'),
+          nickname: localStorage.getItem('nickname') || '사용자'
+        }
+      : null
   )
-// localStorage에 token이 있으면
-// user = "eyJhbGci..." (토큰 문자열)
-// → user가 null이 아니에요!
-// → 로그인 상태로 인식해요!
 
-// 그래서 댓글 작성, 글쓰기가 막히지 않아요!
-
-// 백엔드 연동 후 AuthProvider.jsx 이렇게 바꿔요!
-
-// const [user, setUser] = useState(null)
-
-// const login = (token, userInfo) => {
-//   localStorage.setItem('token', token)
-//   setUser(userInfo)        // ← { nickname, email 등 } 저장
-// }
-
-// const logout = () => {
-//   localStorage.removeItem('token')
-//   setUser(null)
-// }
-
-  const login = (token) => {
-    localStorage.setItem('token', token)   // ✅ 토큰 저장
-    setUser(token)                         // ✅ Context에도 저장
+  // ✅ 현재 : 토큰 + 닉네임 저장
+  // 🔄 백엔드 연동 후 : login(token, userInfo) 형태로 바꾸기
+  //    예시) login(response.data.token, response.data.user)
+  //    userInfo = { nickname: "오충환", email: "...", ... }
+  const login = (token, nickname) => {
+    localStorage.setItem('token', token)
+    localStorage.setItem('nickname', nickname)
+    setUser({ token, nickname })
   }
 
+  // ✅ 현재 : 토큰 + 닉네임 삭제
+  // 🔄 백엔드 연동 후 : 서버에 로그아웃 API 호출 추가
+  //    예시) POST /api/auth/logout 호출 후 localStorage 삭제
   const logout = () => {
-    localStorage.removeItem('token')       // ✅ 토큰 삭제
-    setUser(null)                          // ✅ Context 초기화
+    localStorage.removeItem('token')
+    localStorage.removeItem('nickname')
+    setUser(null)
   }
 
   return (

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 import logo from "../../assets/images/logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ← 추가(, useNavigate)
+import { useAuth } from "../../context/AuthContext";  // ← 추가
 
 const Header = () => {
+  const { user, logout } = useAuth();  // ← 추가
+  const navigate = useNavigate();      // ← 추가
+
   const menuList = [
     { name: "축제행사", path: "/festival" },
     { name: "캘린더", path: "/calendar" },
@@ -33,6 +37,12 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // ← 추가
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <header
       className={`${styles.header} ${isVisible ? styles.show : styles.hide}`}
@@ -54,7 +64,7 @@ const Header = () => {
           </ul>
         </nav>
 
-        <div className={styles.navRight}>
+        {/* <div className={styles.navRight}>
           <ul>
             <li>
               <Link to="/login">로그인</Link>
@@ -63,7 +73,35 @@ const Header = () => {
               <Link to="/signup">회원가입</Link>
             </li>
           </ul>
+        </div> */}
+
+        {/* ↓ 이 부분만 수정했어요! */}
+        <div className={styles.navRight}>
+          <ul>
+            {user ? (
+              // 로그인 상태
+              <>
+                <li>
+                  <span>{user.nickname}님 환영합니다!</span>   {/* 백엔드 연동 후 작동해요 */}
+                </li>
+                <li>
+                  <button onClick={handleLogout}>로그아웃</button>
+                </li>
+              </>
+            ) : (
+              // 비로그인 상태
+              <>
+                <li>
+                  <Link to="/login">로그인</Link>
+                </li>
+                <li>
+                  <Link to="/signup">회원가입</Link>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
+
       </div>
     </header>
   );

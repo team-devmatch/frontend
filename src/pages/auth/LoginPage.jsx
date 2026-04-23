@@ -1,7 +1,7 @@
 import styles from './LoginPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import logo from '../../assets/festigo_logo.svg'
+import logo from "../../assets/images/logo.svg"
 import { login } from '../../api/auth'
 import { useAuth } from '../../context/useAuth'
 

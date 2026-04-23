@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Header.module.css";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.svg"
 import { Link, useNavigate } from "react-router-dom"; // ← 추가(, useNavigate)
-import { useAuth } from "../../context/AuthContext";  // ← 추가
+import { useAuth } from "../../context/useAuth";  // ← 추가
 
 const Header = () => {
   const { user, logout } = useAuth();  // ← 추가
@@ -82,10 +82,17 @@ const Header = () => {
               // 로그인 상태
               <>
                 <li>
-                  <span>{user.nickname}님 환영합니다!</span>   {/* 백엔드 연동 후 작동해요 */}
+                  <span
+                    onClick={() => navigate('/mypage')}
+                    className={styles.userNickname}
+                  >
+                    {user.nickname}님 환영합니다!
+                  </span>   {/* 백엔드 연동 후 작동해요 */}
                 </li>
                 <li>
-                  <button onClick={handleLogout}>로그아웃</button>
+                  <span onClick={handleLogout} className={styles.logout}>
+                    로그아웃
+                  </span>
                 </li>
               </>
             ) : (

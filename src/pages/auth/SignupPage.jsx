@@ -1,7 +1,7 @@
 import styles from './SignupPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import logo from '../../assets/festigo_logo.svg'
+import logo from "../../assets/images/logo.svg"
 import { register } from '../../api/auth'
 import { RULES, MESSAGES } from '../../constants/validation'
 

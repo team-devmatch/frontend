@@ -3,33 +3,38 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPosts } from '../../api/board'
 
-const LIMIT = 5 // 페이지당 게시글 수
+const LIMIT = 5
 
 const BoardListPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('전체')
-  const [posts, setPosts] = useState([])
+  const [allPosts, setAllPosts] = useState([]) // 전체 데이터 보관
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
-    getPosts({ page: currentPage, limit: LIMIT }).then(({ posts, totalCount }) => {
-      setPosts(posts)
-      setTotalCount(totalCount)
+    getPosts().then(({ posts }) => {
+      setAllPosts(posts)
     })
-  }, [currentPage])
+  }, [])
 
   const tabs = ['잡담', '후기']
 
-  const filtered = activeTab === '전체'
-    ? posts
-    : posts.filter(p => p.category === activeTab)
+  // 프론트에서 직접 필터링
+  const filteredPosts = activeTab === '전체'
+    ? allPosts
+    : allPosts.filter(post => post.category === activeTab)
 
-  const totalPages = Math.ceil(totalCount / LIMIT)
+  const totalPages = Math.ceil(filteredPosts.length / LIMIT)
+
+  // 현재 페이지 데이터
+  const pagedPosts = filteredPosts.slice(
+    (currentPage - 1) * LIMIT,
+    currentPage * LIMIT
+  )
 
   const handleTabClick = (tab) => {
     setActiveTab(prev => prev === tab ? '전체' : tab)
-    setCurrentPage(1) // 탭 변경 시 1페이지로 초기화
+    setCurrentPage(1)
   }
 
   return (
@@ -48,9 +53,10 @@ const BoardListPage = () => {
           <div className={styles.tabs}>
             {tabs.map(tab => (
               <button
+                key={tab}
                 className={`
-                  ${styles.tab} 
-                  ${activeTab === tab ? styles.tabActive : ''} 
+                  ${styles.tab}
+                  ${activeTab === tab ? styles.tabActive : ''}
                   ${tab === '잡담' ? styles.tabJabdam : styles.tabHugi}
                 `}
                 onClick={() => handleTabClick(tab)}
@@ -69,14 +75,30 @@ const BoardListPage = () => {
 
         {/* 게시글 리스트 */}
         <div className={styles.listCard}>
-          {filtered.map(post => (
+          {pagedPosts.length === 0 && (
+            <div className={styles.empty}>게시글이 없습니다.</div>
+          )}
+          {pagedPosts.map(post => (
             <div
-              key={post.id}
+              key={post.postId}
               className={styles.postItem}
-              onClick={() => navigate(`/board/${post.id}`)}
+              onClick={() => navigate(`/board/${post.postId}`)}
             >
               {/* 아바타 */}
-              <div className={styles.avatar}>🌱</div>
+              <div className={styles.avatar}>
+                {post.profileImage
+                  ? <img
+                      src={post.profileImage}
+                      alt="프로필"
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.parentNode.innerText = '🌱'
+                      }}
+                    />
+                  : '🌱'}
+              </div>
+
 
               {/* 내용 */}
               <div className={styles.postContent}>
@@ -88,16 +110,16 @@ const BoardListPage = () => {
                 </div>
                 <div className={styles.postTitle}>
                   {post.title}
-                  {post.images.length > 0 && <span className={styles.imgIcon}>📷</span>}
+                  {post.imageUrl && <span className={styles.imgIcon}>📷</span>}
                 </div>
                 <div className={styles.postMeta}>
-                  조회 {post.views} · 댓글 {post.comments.length}
+                  조회 {post.viewCount} · 댓글 {post.commentCount}
                 </div>
               </div>
 
               {/* 우측 좋아요 */}
               <div className={styles.likeBox}>
-                <span className={styles.likeCount}>♡{post.likes}</span>
+                <span className={styles.likeCount}>♡ {post.likeCount}</span>
               </div>
             </div>
           ))}
@@ -133,7 +155,6 @@ const BoardListPage = () => {
             </button>
           </div>
         )}
-
       </div>
     </div>
   )

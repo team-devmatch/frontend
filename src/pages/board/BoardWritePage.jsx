@@ -6,12 +6,12 @@ import { getPostById, createPost, updatePost } from '../../api/board'
 const BoardWritePage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const editId = searchParams.get('edit') // 수정 모드면 id 있음, 글쓰기면 null
+  const editId = searchParams.get('edit')
 
   const [category, setCategory] = useState('잡담')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [images, setImages] = useState([]) // { file, preview }
+  const [image, setImage] = useState(null) // { file, preview } - 단일 이미지
 
   // 수정 모드일 때 기존 데이터 불러오기
   useEffect(() => {
@@ -21,36 +21,44 @@ const BoardWritePage = () => {
           setCategory(data.category)
           setTitle(data.title)
           setContent(data.content)
-          // 기존 이미지는 url만 있으므로 preview로 변환
-          setImages(data.images.map(url => ({ file: null, preview: url })))
+          // 기존 이미지 url → preview로 세팅
+          if (data.imageUrl) {
+            setImage({ file: null, preview: data.imageUrl })
+          }
         }
       })
     }
   }, [editId])
 
   const handleImgAdd = (e) => {
-    const files = Array.from(e.target.files)
-    const newImages = files.map(file => ({
+    const file = e.target.files[0]
+    if (!file) return
+    setImage({
       file,
       preview: URL.createObjectURL(file)
-    }))
-    setImages(prev => [...prev, ...newImages].slice(0, 5)) // 최대 5장
+    })
   }
 
-  const handleImgRemove = (index) => {
-    setImages(prev => prev.filter((_, i) => i !== index))
+  const handleImgRemove = () => {
+    setImage(null)
   }
 
   const handleSubmit = async () => {
     if (!title.trim()) return alert('제목을 입력해주세요.')
     if (!content.trim()) return alert('내용을 입력해주세요.')
 
-    const postData = { category, title, content, images }
+    const formData = new FormData()
+    formData.append('category', category)
+    formData.append('title', title)
+    formData.append('content', content)
+    if (image?.file) {
+      formData.append('image', image.file)
+    }
 
     if (editId) {
-      await updatePost(editId, postData)
+      await updatePost(editId, formData)
     } else {
-      await createPost(postData)
+      await createPost(formData)
     }
 
     navigate('/board')
@@ -59,7 +67,6 @@ const BoardWritePage = () => {
   return (
     <div className={styles.wrap}>
       <div className={styles.container}>
-        {/* 수정 모드면 '글 수정', 아니면 '글쓰기' */}
         <h2 className={styles.title}>{editId ? '글 수정' : '글쓰기'}</h2>
 
         <div className={styles.card}>
@@ -107,35 +114,42 @@ const BoardWritePage = () => {
             />
           </div>
 
-          {/* 사진 첨부 */}
+          {/* 사진 첨부 - 단일 이미지 */}
           <div className={styles.field}>
             <label className={styles.label}>사진 첨부</label>
-            <label className={styles.imgUploadBox} htmlFor="imgUpload">
-              📎 클릭하여 사진을 첨부하세요 (최대 5장)
-            </label>
-            <input
-              id="imgUpload"
-              type="file"
-              accept="image/*"
-              multiple
-              style={{ display: 'none' }}
-              onChange={handleImgAdd}
-            />
+
+            {/* 이미지 없을 때만 업로드 버튼 표시 */}
+            {!image && (
+              <>
+                <label className={styles.imgUploadBox} htmlFor="imgUpload">
+                  📎 클릭하여 사진을 첨부하세요 (1장)
+                </label>
+                <input
+                  id="imgUpload"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleImgAdd}
+                />
+              </>
+            )}
 
             {/* 썸네일 미리보기 */}
-            {images.length > 0 && (
+            {image && (
               <div className={styles.previewList}>
-                {images.map((img, i) => (
-                  <div key={i} className={styles.previewItem}>
-                    <img src={img.preview} alt={`첨부${i+1}`} className={styles.previewImg} />
-                    <button
-                      className={styles.removeBtn}
-                      onClick={() => handleImgRemove(i)}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
+                <div className={styles.previewItem}>
+                  <img
+                    src={image.preview}
+                    alt="첨부이미지"
+                    className={styles.previewImg}
+                  />
+                  <button
+                    className={styles.removeBtn}
+                    onClick={handleImgRemove}
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
             )}
           </div>

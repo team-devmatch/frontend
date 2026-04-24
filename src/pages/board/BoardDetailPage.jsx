@@ -4,13 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/useAuth'
 import {
   getPostById,
+  getComments,
   deletePost,
   createComment,
   updateComment,
   deleteComment,
   toggleLike,
 } from '../../api/board'
-
 
 const BoardDetailPage = () => {
   const { id } = useParams()
@@ -24,76 +24,79 @@ const BoardDetailPage = () => {
   const [comments, setComments] = useState([])
   const [editCommentId, setEditCommentId] = useState(null)
   const [editCommentText, setEditCommentText] = useState('')
-  const [selectedImgIndex, setSelectedImgIndex] = useState(null)
+  const [imgModalOpen, setImgModalOpen] = useState(false)  // 단일 이미지 모달
 
   useEffect(() => {
     getPostById(id).then(data => {
       if (data) {
         setPost(data)
-        setLikeCount(data.likes)
-        setComments(data.comments)
+        setLikeCount(data.likeCount)
+        setLiked(data.liked)
       }
+    })
+
+    getComments(id).then(data => {
+      setComments(data || [])
     })
   }, [id])
 
   if (!post) return <div className={styles.wrap}>게시글을 찾을 수 없습니다.</div>
 
-  // ✅ 좋아요 → 비회원이면 로그인 페이지로 이동
+  const isOwner = user?.nickname === post.nickname
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    return new Date(dateStr).toLocaleDateString('ko-KR', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+    })
+  }
+
   const handleLike = async () => {
     if (!user) {
       navigate('/login')
       return
     }
-    const res = await toggleLike(post.id, liked)
-    if (res.success) {
-      setLiked(!liked)
-      setLikeCount(prev => liked ? prev - 1 : prev + 1)
-    }
+    await toggleLike(post.postId)
+    setLiked(prev => !prev)
+    setLikeCount(prev => liked ? prev - 1 : prev + 1)
   }
 
-  // ✅ 댓글 작성 → 비회원이면 로그인 페이지로 이동
   const handleCommentSubmit = async () => {
     if (!user) {
       navigate('/login')
       return
     }
     if (!comment.trim()) return
-    const newComment = await createComment(post.id, {
-      id: Date.now(),
-      nickname: user.nickname,  // ✅ 익명 제거
+    const newComment = await createComment(post.postId, {
       content: comment,
-      time: '방금 전',
-      isOwner: true,
     })
     setComments(prev => [...prev, newComment])
     setComment('')
   }
 
   const handleCommentDelete = async (commentId) => {
-    const res = await deleteComment(post.id, commentId)
-    if (res.success) {
-      setComments(prev => prev.filter(c => c.id !== commentId))
-    }
+    await deleteComment(post.postId, commentId)
+    setComments(prev => prev.filter(c => c.commentId !== commentId))
   }
 
   const handleCommentEditStart = (c) => {
-    setEditCommentId(c.id)
+    setEditCommentId(c.commentId)
     setEditCommentText(c.content)
   }
 
   const handleCommentEditDone = async (commentId) => {
     if (!editCommentText.trim()) return
-    const updated = await updateComment(post.id, commentId, { content: editCommentText })
+    const updated = await updateComment(post.postId, commentId, { content: editCommentText })
     setComments(prev => prev.map(c =>
-      c.id === commentId ? { ...c, content: updated.content } : c
+      c.commentId === commentId ? { ...c, content: updated.content } : c
     ))
     setEditCommentId(null)
     setEditCommentText('')
   }
 
   const handlePostDelete = async () => {
-    const res = await deletePost(post.id)
-    if (res.success) navigate('/board')
+    await deletePost(post.postId)
+    navigate('/board')
   }
 
   return (
@@ -120,16 +123,26 @@ const BoardDetailPage = () => {
           {/* 작성자 정보 */}
           <div className={styles.metaRow}>
             <div className={styles.authorInfo}>
-              <div className={styles.avatar}>🌱</div>
+              <div className={styles.avatar}>
+                {post.profileImage
+                  ? <img
+                      src={post.profileImage}
+                      alt="프로필"
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                      onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerText = '🌱' }}
+                    />
+                  : '🌱'}
+              </div>
+
               <span className={styles.nickname}>{post.nickname}</span>
-              <span className={styles.date}>{post.date}</span>
-              <span className={styles.views}>조회 {post.views}</span>
+              <span className={styles.date}>{formatDate(post.createdAt)}</span>
+              <span className={styles.views}>조회 {post.viewCount}</span>
             </div>
-            {post.isOwner && (
+            {isOwner && (
               <div className={styles.ownerBtns}>
                 <button
                   className={styles.editBtn}
-                  onClick={() => navigate(`/board/write?edit=${post.id}`)}
+                  onClick={() => navigate(`/board/write?edit=${post.postId}`)}
                 >
                   수정
                 </button>
@@ -148,21 +161,19 @@ const BoardDetailPage = () => {
           {/* 본문 */}
           <p className={styles.content}>{post.content}</p>
 
-          {/* 첨부 이미지 */}
-          {post.images.length > 0 && (
+          {/* 첨부 이미지 - 클릭하면 모달 오픈 */}
+          {post.imageUrl && (
             <div className={styles.imageList}>
-              {post.images.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt={`첨부${i+1}`}
-                  className={styles.postImg}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => setSelectedImgIndex(i)}
-                />
-              ))}
+              <img
+                src={post.imageUrl}
+                alt="첨부이미지"
+                className={styles.postImg}
+                style={{ cursor: 'pointer' }}
+                onClick={() => setImgModalOpen(true)}
+              />
             </div>
           )}
+
 
           {/* 좋아요 */}
           <div className={styles.likeRow}>
@@ -202,13 +213,23 @@ const BoardDetailPage = () => {
 
             {/* 댓글 리스트 */}
             {comments.map(c => (
-              <div key={c.id} className={styles.commentItem}>
-                <div className={styles.avatar}>🌱</div>
+              <div key={c.commentId} className={styles.commentItem}>
+                <div className={styles.avatar}>
+                  {c.profileImage
+                    ? <img
+                        src={c.profileImage}
+                        alt="프로필"
+                        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                        onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerText = '🌱' }}
+                      />
+                    : '🌱'}
+                </div>
+
                 <div className={styles.commentBody}>
                   <div className={styles.commentTop}>
                     <span className={styles.commentNickname}>{c.nickname}</span>
-                    <span className={styles.commentTime}>{c.time}</span>
-                    {c.isOwner && (
+                    <span className={styles.commentTime}>{formatDate(c.createdAt)}</span>
+                    {user?.nickname === c.nickname && (
                       <div className={styles.commentBtns}>
                         <button
                           className={styles.commentEditBtn}
@@ -218,24 +239,24 @@ const BoardDetailPage = () => {
                         </button>
                         <button
                           className={styles.commentDeleteBtn}
-                          onClick={() => handleCommentDelete(c.id)}
+                          onClick={() => handleCommentDelete(c.commentId)}
                         >
                           삭제
                         </button>
                       </div>
                     )}
                   </div>
-                  {editCommentId === c.id ? (
+                  {editCommentId === c.commentId ? (
                     <div className={styles.commentEditRow}>
                       <input
                         className={styles.commentInput}
                         value={editCommentText}
                         onChange={(e) => setEditCommentText(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleCommentEditDone(c.id)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleCommentEditDone(c.commentId)}
                       />
                       <button
                         className={styles.commentSubmitBtn}
-                        onClick={() => handleCommentEditDone(c.id)}
+                        onClick={() => handleCommentEditDone(c.commentId)}
                       >
                         완료
                       </button>
@@ -254,11 +275,11 @@ const BoardDetailPage = () => {
             ))}
           </div>
 
-          {/* 이미지 확대 모달 */}
-          {selectedImgIndex !== null && (
+          {/* 이미지 확대 모달 - 단일 imageUrl */}
+          {imgModalOpen && (
             <div
               className={styles.imgModalOverlay}
-              onClick={() => setSelectedImgIndex(null)}
+              onClick={() => setImgModalOpen(false)}
             >
               <div
                 className={styles.imgModal}
@@ -266,38 +287,15 @@ const BoardDetailPage = () => {
               >
                 <button
                   className={styles.imgModalClose}
-                  onClick={() => setSelectedImgIndex(null)}
+                  onClick={() => setImgModalOpen(false)}
                 >
                   ✕
                 </button>
                 <img
-                  src={post.images[selectedImgIndex]}
+                  src={post.imageUrl}
                   alt="확대 이미지"
                   className={styles.imgModalImg}
                 />
-                {post.images.length > 1 && (
-                  <div className={styles.imgModalNav}>
-                    <button
-                      className={styles.imgModalNavBtn}
-                      onClick={() => setSelectedImgIndex(prev =>
-                        prev === 0 ? post.images.length - 1 : prev - 1
-                      )}
-                    >
-                      ◀
-                    </button>
-                    <span className={styles.imgModalCount}>
-                      {selectedImgIndex + 1} / {post.images.length}
-                    </span>
-                    <button
-                      className={styles.imgModalNavBtn}
-                      onClick={() => setSelectedImgIndex(prev =>
-                        prev === post.images.length - 1 ? 0 : prev + 1
-                      )}
-                    >
-                      ▶
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           )}

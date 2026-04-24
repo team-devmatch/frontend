@@ -40,6 +40,7 @@
   border-radius: 20px;
   padding: 3px 10px;
   flex-shrink: 0;
+
 }
 
 /* 잡담 → 파란색 */
@@ -58,6 +59,8 @@
   font-size: 22px;
   font-weight: 700;
   color: var(--text);
+  margin-top: 10px;
+  margin-bottom: 0.1rem;
 }
 
 /* 작성자 정보 */

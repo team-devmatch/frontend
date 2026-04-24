@@ -4,7 +4,7 @@ React 기반 프론트엔드
 
 ## 기술 스택
 - React 
-- TailwindCSS
+- css module
 - Redux Toolkit
 - Axios
 - REST API 연동

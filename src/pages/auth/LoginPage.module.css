@@ -1,6 +1,6 @@
 .wrap {
   min-height: 100vh;
-  background: #f8f8f8;
+  background: #fff;          /* #f8f8f8 → #fff */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,8 +11,8 @@
   width: 100%;
   max-width: 545px;
   background: #fff;
-  border-radius: 20px;
-  border: 1px solid #eee;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
   box-shadow: 0 4px 24px rgba(0,0,0,0.07);
   overflow: hidden;
 }
@@ -37,9 +37,9 @@
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--text);
   margin-bottom: 6px;
-  text-align: left;  /* ← 좌정렬 */
+  text-align: left;
 }
 
 .field {
@@ -53,19 +53,21 @@
   border-radius: 10px;
   padding: 12px 15px;
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--text);
   outline: none;
   box-sizing: border-box;
 }
 
+/* input focus → 파란색 */
 .input:focus {
-  border-color: #e8638c;
+  border-color: var(--primary);
   background: #fff;
 }
 
+/* 로그인 버튼 → 파란색 */
 .btn {
   width: 100%;
-  background: linear-gradient(135deg, #e8638c, #c94070);
+  background: var(--primary);   /* 그라데이션 → 파란색 */
   border: none;
   border-radius: 12px;
   padding: 14px;
@@ -74,6 +76,11 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 0.25rem;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
 }
 
 .link {
@@ -83,8 +90,19 @@
   margin-top: 0.9rem;
 }
 
+/* 회원가입 링크 → 파란색 */
 .link span {
-  color: #e8638c;
+  color: var(--primary);
   font-weight: 700;
   cursor: pointer;
 }
+
+.error {
+  font-size: 12px;
+  color: #999;            /* 에러 → 회색 수정 */
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+
+

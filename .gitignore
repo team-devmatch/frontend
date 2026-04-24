@@ -27,4 +27,4 @@ dist-ssr
 # VITE_API_BASE_URL=https://api.festigo.com  # ← 실제 서버 주소
 .env
 .env.local
-.env.production
+.env.production.claude/

@@ -1,6 +1,6 @@
 .wrap {
   min-height: 100vh;
-  background: #f8f8f8;
+  background: #fff;          /* #f8f8f8 → #fff */
   padding: 2rem 1rem;
   padding-top: 100px;
 }
@@ -11,19 +11,19 @@
 }
 
 .title {
-  font-size: 20px;
+  font-size: 24px;           /* 20px → 24px */
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
+  color: var(--text);
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
 .card {
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
   padding: 1.75rem;
+  /* box-shadow 제거 */
 }
 
 /* 필드 */
@@ -35,7 +35,7 @@
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--text);
   margin-bottom: 8px;
   text-align: left;
 }
@@ -47,19 +47,34 @@
 }
 
 .tab {
-  background: #f0f0f0;
-  border: none;
-  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
   padding: 6px 18px;
   font-size: 13px;
   font-weight: 600;
-  color: #888;
+  color: var(--text-sub);
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.tabActive {
-  background: #e8638c;
-  color: #fff;
+.tab:hover {
+  border-color: #aaa;
+  color: #555;
+}
+
+/* 잡담 선택 → 파란색 */
+.tabActive.tabJabdam {
+  background: #e8f4fd;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 후기 선택 → 초록색 */
+.tabActive.tabHugi {
+  background: #e8f5e9;
+  border-color: #4CAF50;
+  color: #4CAF50;
 }
 
 /* 인풋 */
@@ -70,13 +85,14 @@
   border-radius: 10px;
   padding: 11px 15px;
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--text);
   outline: none;
   box-sizing: border-box;
 }
 
+/* input focus → 파란색 */
 .input:focus {
-  border-color: #e8638c;
+  border-color: var(--primary);
   background: #fff;
 }
 
@@ -89,15 +105,16 @@
   border-radius: 10px;
   padding: 11px 15px;
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--text);
   outline: none;
   box-sizing: border-box;
   resize: none;
   line-height: 1.6;
 }
 
+/* textarea focus → 파란색 */
 .textarea:focus {
-  border-color: #e8638c;
+  border-color: var(--primary);
   background: #fff;
 }
 
@@ -117,9 +134,10 @@
   box-sizing: border-box;
 }
 
+/* hover → 파란색 */
 .imgUploadBox:hover {
-  border-color: #e8638c;
-  color: #e8638c;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 /* 썸네일 */
@@ -149,7 +167,7 @@
   right: -6px;
   width: 20px;
   height: 20px;
-  background: #e8638c;
+  background: #e8638c;       /* 핑크 유지 */
   border: none;
   border-radius: 50%;
   color: #fff;
@@ -162,10 +180,10 @@
   line-height: 1;
 }
 
-/* 등록 버튼 */
+/* 등록 버튼 → 파란색 */
 .submitBtn {
   width: 100%;
-  background: linear-gradient(135deg, #e8638c, #c94070);
+  background: var(--primary);   /* 그라데이션 → 파란색 */
   border: none;
   border-radius: 12px;
   padding: 14px;
@@ -174,4 +192,9 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+
+.submitBtn:hover {
+  background: var(--primary-hover);
 }

@@ -1,7 +1,6 @@
-/* 기존 CSS 전부 그대로 유지 */
 .wrap {
   min-height: 100vh;
-  background: #f8f8f8;
+  background: #fff;
   padding: 2rem 1rem;
   padding-top: 100px;
 }
@@ -12,10 +11,10 @@
 }
 
 .title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
+  color: var(--text);
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
@@ -31,38 +30,61 @@
   gap: 6px;
 }
 
+/* 지환님 시안처럼 pill 형태 */
 .tab {
-  background: #f0f0f0;
-  border: none;
-  border-radius: 20px;
-  padding: 6px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  padding: 6px 18px;
   font-size: 13px;
   font-weight: 600;
-  color: #888;
+  color: var(--text-sub);
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.tabActive {
-  background: #e8638c;
-  color: #fff;
+/* 1. 탭 hover → 파란색 제거, 회색으로 */
+.tab:hover {
+  border-color: #aaa;       /* var(--primary) → #aaa */
+  color: #555;              /* var(--primary) → #555 */
 }
 
+/* 잡담 탭 액티브 → 파란색 */
+.tabActive.tabJabdam {
+  background: #e8f4fd;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 후기 탭 액티브 → 초록색 */
+.tabActive.tabHugi {
+  background: #e8f5e9;
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+/* 글쓰기 버튼 → 파란색 */
 .writeBtn {
-  background: #e8638c;
+  background: var(--primary);
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: var(--radius-btn);
+  padding: 8px 20px;
   color: #fff;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
+.writeBtn:hover {
+  background: var(--primary-hover);
+}
+
+/* 리스트 카드 → border 제거, 깔끔하게 */
 .listCard {
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
   overflow: hidden;
 }
 
@@ -70,7 +92,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid #f5f5f5;
   cursor: pointer;
   transition: background 0.15s;
@@ -81,14 +103,14 @@
 }
 
 .postItem:hover {
-  background: #fafafa;
+  background: var(--bg-gray);
 }
 
 .avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #d4edda;
+  background: #e8f4fd;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +132,7 @@
 .nickname {
   font-size: 13px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text);
 }
 
 .tag {
@@ -120,19 +142,21 @@
   padding: 2px 8px;
 }
 
+/* 잡담 → 파란색 */
 .tagPink {
-  background: #fde8ef;
-  color: #e8638c;
+  background: #e8f4fd;
+  color: var(--primary);
 }
 
+/* 후기 → 초록색 */
 .tagPurple {
-  background: #ede8fd;
-  color: #7c63e8;
+  background: #e8f5e9;
+  color: #4CAF50;
 }
 
 .postTitle {
   font-size: 14px;
-  color: #1a1a1a;
+  color: var(--text);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -144,7 +168,7 @@
 
 .postMeta {
   font-size: 11px;
-  color: #bbb;
+  color: var(--text-sub);
   margin-top: 3px;
   text-align: left;
 }
@@ -159,13 +183,14 @@
   flex-shrink: 0;
 }
 
+/* 2. 좋아요 → 핑크로 */
 .likeCount {
   font-size: 14px;
   font-weight: 700;
-  color: #e8638c;
+  color: #e8638c;           /* var(--primary) → #e8638c */
 }
 
-/* ↓ 페이지네이션 추가 */
+/* 페이지네이션 */
 .pagination {
   display: flex;
   justify-content: center;
@@ -180,15 +205,15 @@
   border: none;
   border-radius: 50%;
   background: none;
-  color: #888;
+  color: var(--text-sub);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: #fde8ef;
-  color: #e8638c;
+  background: #e8f4fd;
+  color: var(--primary);
 }
 
 .pageBtn:disabled {
@@ -196,8 +221,9 @@
   cursor: default;
 }
 
+/* 액티브 페이지 → 파란색 */
 .pageBtnActive {
-  background: #e8638c;
-  color: white;
+  background: var(--primary);
+  color: #fff;
   font-weight: bold;
 }

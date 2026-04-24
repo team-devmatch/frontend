@@ -1,6 +1,6 @@
 .wrap {
   min-height: 100vh;
-  background: #f8f8f8;
+  background: #fff;        /* #f8f8f8 → #fff */
   padding: 2rem 1rem;
   padding-top: 100px;
 }
@@ -11,19 +11,19 @@
 }
 
 .pageTitle {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 1rem;
+  color: var(--text);
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
 .card {
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
   padding: 1.75rem;
+  /* box-shadow 제거 */
 }
 
 /* 말머리 + 제목 */
@@ -34,7 +34,6 @@
   margin-bottom: 0.5rem;
 }
 
-
 .tag {
   font-size: 12px;
   font-weight: 700;
@@ -43,20 +42,22 @@
   flex-shrink: 0;
 }
 
+/* 잡담 → 파란색 */
 .tagPink {
-  background: #fde8ef;
-  color: #e8638c;
+  background: #e8f4fd;
+  color: var(--primary);
 }
 
+/* 후기 → 초록색 */
 .tagPurple {
-  background: #ede8fd;
-  color: #7c63e8;
+  background: #e8f5e9;
+  color: #4CAF50;
 }
 
 .postTitle {
-  font-size: 22px; /*게시글 제목 크기*/
+  font-size: 22px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text);
 }
 
 /* 작성자 정보 */
@@ -77,7 +78,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #d4edda;
+  background: #e8f4fd;     /* d4edda → 파란 계열 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,17 +89,17 @@
 .nickname {
   font-size: 13px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text);
 }
 
 .date {
   font-size: 12px;
-  color: #bbb;
+  color: var(--text-sub);
 }
 
 .views {
   font-size: 12px;
-  color: #bbb;
+  color: var(--text-sub);
 }
 
 /* 수정/삭제 버튼 */
@@ -119,13 +120,13 @@
 }
 
 .deleteBtn {
-  background: #fde8ef;
+  background: var(--primary);
   border: none;
   border-radius: 8px;
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #e8638c;
+  color: #fff;          /* 핑크 유지 */
   cursor: pointer;
 }
 
@@ -159,7 +160,7 @@
   object-fit: cover;
 }
 
-/* 좋아요 */
+/* 좋아요 → 핑크 유지 */
 .likeRow {
   display: flex;
   justify-content: center;
@@ -173,7 +174,7 @@
   padding: 8px 24px;
   font-size: 14px;
   font-weight: 700;
-  color: #e8638c;
+  color: #fff;
   cursor: pointer;
 }
 
@@ -191,7 +192,7 @@
 .commentCount {
   font-size: 14px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text);
   margin-bottom: 1rem;
 }
 
@@ -209,17 +210,19 @@
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--text);
   outline: none;
 }
 
+/* 댓글 input focus → 파란색 */
 .commentInput:focus {
-  border-color: #e8638c;
+  border-color: var(--primary);
   background: #fff;
 }
 
+/* 댓글 등록 버튼 → 파란색 */
 .commentSubmitBtn {
-  background: #e8638c;
+  background: var(--primary);
   border: none;
   border-radius: 10px;
   padding: 10px 16px;
@@ -248,12 +251,11 @@
   white-space: nowrap;
 }
 
-
 /* 댓글 없을 때 */
 .noComment {
   text-align: center;
   font-size: 13px;
-  color: #bbb;
+  color: var(--text-sub);
   padding: 2rem 0;
 }
 
@@ -283,12 +285,12 @@
 .commentNickname {
   font-size: 13px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text);
 }
 
 .commentTime {
   font-size: 11px;
-  color: #bbb;
+  color: var(--text-sub);
 }
 
 /* 댓글 수정/삭제 버튼 */
@@ -315,7 +317,7 @@
   background: none;
   border: none;
   font-size: 11px;
-  color: #e8638c;
+  color: var(--primary);
   cursor: pointer;
   padding: 2px 6px;
 }

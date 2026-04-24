@@ -48,8 +48,11 @@ const BoardListPage = () => {
           <div className={styles.tabs}>
             {tabs.map(tab => (
               <button
-                key={tab}
-                className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
+                className={`
+                  ${styles.tab} 
+                  ${activeTab === tab ? styles.tabActive : ''} 
+                  ${tab === '잡담' ? styles.tabJabdam : styles.tabHugi}
+                `}
                 onClick={() => handleTabClick(tab)}
               >
                 {tab}

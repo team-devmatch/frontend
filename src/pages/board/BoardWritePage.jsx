@@ -71,7 +71,11 @@ const BoardWritePage = () => {
               {['잡담', '후기'].map(tab => (
                 <button
                   key={tab}
-                  className={`${styles.tab} ${category === tab ? styles.tabActive : ''}`}
+                  className={`
+                    ${styles.tab}
+                    ${category === tab ? styles.tabActive : ''}
+                    ${tab === '잡담' ? styles.tabJabdam : styles.tabHugi}
+                  `}
                   onClick={() => setCategory(tab)}
                 >
                   {tab}

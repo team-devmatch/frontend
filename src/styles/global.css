@@ -38,3 +38,22 @@ li {
   max-width: 100%;
   overflow-x: hidden;
 }
+
+:root {
+  /* 포인트 컬러 */
+  --primary: #4DA6FF;
+  --primary-hover: #2e95ff;
+
+  /* 텍스트 */
+  --text: #111111;
+  --text-sub: #888888;
+
+  /* 테두리 / 배경 */
+  --border: #dddddd;
+  --bg-gray: #f8f8f8;
+
+  /* radius */
+  --radius-card: 16px;
+  --radius-btn: 20px;
+  --radius-input: 12px;
+}

@@ -1,0 +1,98 @@
+.detailPage {
+  width: 100%;
+  padding: 100px 0;
+}
+
+.inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 580px 1fr;
+  gap: 84px;
+  align-items: flex-start;
+}
+
+.posterBox {
+  width: 100%;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.posterBox img {
+  width: 100%;
+  display: block;
+}
+
+.infoBox {
+  padding-top: 20px;
+}
+
+.line {
+  display: block;
+  width: 36px;
+  height: 3px;
+  background-color: #5b4bff;
+  margin-bottom: 28px;
+}
+
+.infoBox h1 {
+  font-size: 36px;
+  line-height: 1.35;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 50px;
+}
+
+.infoList {
+  border-top: 1px solid #ddd;
+}
+
+.infoRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  min-height: 84px;
+}
+
+.infoRow strong {
+  height: 100%;
+  background-color: #f7f7f7;
+  border-right: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.infoRow p {
+  padding-left: 28px;
+  font-size: 17px;
+  color: #111;
+}
+
+.description {
+  margin-top: 36px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #444;
+}
+
+.homepageButton {
+  margin-top: 36px;
+  width: 275px;
+  height: 64px;
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.notFound {
+  padding: 120px;
+  text-align: center;
+}

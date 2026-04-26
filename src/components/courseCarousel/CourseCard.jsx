@@ -1,15 +1,25 @@
-import React from "react";
-import styles from "./CourseCarousel.module.css";
+import { useNavigate } from "react-router-dom";
+import styles from "./courseCarousel.module.css";
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ festival }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/festivals/${festival.id}`);
+  };
+
   return (
-    <div className={styles.card}>
-      <img src={course.image} alt={course.title} className={styles.cardImage} />
-      <div className={styles.overlay} />
-      <div className={styles.textBox}>
-        <p className={styles.cardTitle}>{course.title}</p>
-        <p className={styles.cardSubtitle}>{course.subtitle}</p>
+    <div className={styles.card} onClick={handleClick}>
+      <div className={styles.imageBox}>
+        <img src={festival.posterImage} alt={festival.title} />
       </div>
+
+      <div className={styles.titleWrap}>
+        <h3 className={styles.title}>{festival.title}</h3>
+      </div>
+
+      <p className={styles.place}>{festival.place}</p>
+      <p className={styles.period}>{festival.period}</p>
     </div>
   );
 };

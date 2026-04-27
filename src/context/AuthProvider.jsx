@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { AuthContext } from './AuthContext'
-import { getMe } from '../api/auth'  // ← 경로 맞게 수정해줘요
+import { getMe } from '../api/auth'
 
 export const AuthProvider = ({ children }) => {
 
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             token,
             nickname: res.data.nickname,
             email: res.data.email,
-            profileImage: res.data.profileImage  // ✅ 추가!
+            profileImage: res.data.profileImage
           })
         })
         .catch(() => {
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
           token,
           nickname: res.data.nickname,
           email: res.data.email,
-          profileImage: res.data.profileImage  // ✅ 추가!
+          profileImage: res.data.profileImage
         })
       })
       .catch(() => {

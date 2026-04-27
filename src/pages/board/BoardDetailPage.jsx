@@ -1,5 +1,5 @@
 import styles from './BoardDetailPage.module.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react' 
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/useAuth'
 import {
@@ -23,6 +23,7 @@ const getProfileImageUrl = (profileImage) => {
 
 const BoardDetailPage = () => {
   const { id } = useParams()
+  const hasViewed = useRef(false)
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -36,19 +37,20 @@ const BoardDetailPage = () => {
   const [imgModalOpen, setImgModalOpen] = useState(false)
 
   useEffect(() => {
+    if (hasViewed.current) return
+    hasViewed.current = true 
+
     getPostById(id).then(data => {
       if (data) {
         setPost(data)
         setLikeCount(data.likeCount)
         setLiked(data.liked)
-        // ✅ console.log 제거
       }
     })
 
     getComments(id).then(data => {
       setComments(data || [])
     })
-    // ✅ console.log 2개 제거
   }, [id])
 
   if (!post) return <div className={styles.wrap}>게시글을 찾을 수 없습니다.</div>

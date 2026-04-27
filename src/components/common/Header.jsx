@@ -87,7 +87,7 @@ const Header = () => {
                     className={styles.userNickname}
                   >
                     {user.nickname}님 환영합니다!
-                  </span>   {/* 백엔드 연동 후 작동해요 */}
+                  </span>
                 </li>
                 <li>
                   <span onClick={handleLogout} className={styles.logout}>

@@ -69,7 +69,7 @@
   opacity: 0;
 }
 
-/* 닉네임 클릭 시 마이페이지 이동 css 추가 */
+/* 닉네임 클릭 시 마이페이지 이동 */
 /* 클릭 가능한 느낌 주기 */
 .userNickname {
   cursor: pointer;

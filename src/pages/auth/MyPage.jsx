@@ -63,33 +63,23 @@ const MyPage = () => {
     }
   }
 
-  // ✅ 기본 이미지로 변경
-  const handleResetImg = async () => {
-    try {
-      await resetProfileImage()
-      const updated = await getMe()
-      setUser(updated.data)
-      if (updated.data.profileImage) {
+    // ✅ 기본 이미지로 변경
+    const handleResetImg = async () => {
+      try {
+        await resetProfileImage()
+        const updated = await getMe()
+        setUser(updated.data)
         setProfileImg(`${BASE_URL}${updated.data.profileImage}`)
-        // ✅ AuthContext user도 업데이트
         setAuthUser(prev => ({
           ...prev,
           profileImage: updated.data.profileImage
         }))
-      } else {
-        setProfileImg(null)
-        // ✅ AuthContext user도 업데이트
-        setAuthUser(prev => ({
-          ...prev,
-          profileImage: null
-        }))
+        alert('기본 이미지로 변경되었습니다.')
+      } catch (err) {
+        console.error(err)
+        alert('기본 이미지 변경에 실패했습니다.')
       }
-      alert('기본 이미지로 변경되었습니다.')
-    } catch (err) {
-      console.error(err)
-      alert('기본 이미지 변경에 실패했습니다.')
     }
-  }
 
   // ✅ 비밀번호 변경
   const handlePwChange = async () => {
@@ -136,11 +126,12 @@ const MyPage = () => {
           <h3 className={styles.sectionTitle}>내 프로필</h3>
           <div className={styles.profileBox}>
             <div className={styles.avatar}>
-              {/* ✅ 이미지 있으면 이미지, 없으면 이모지 */}
-              {profileImg
-                ? <img src={profileImg} alt="프로필" className={styles.avatarImg} />
-                : <span className={styles.avatarDefault}>🌱</span>
-              }
+              <img
+                src={profileImg}
+                alt="프로필"
+                className={styles.avatarImg}
+              />
+
               <label className={styles.cameraBtn} htmlFor="profileUpload">📷</label>
               <input
                 id="profileUpload"

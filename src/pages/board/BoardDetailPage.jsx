@@ -12,6 +12,15 @@ import {
   toggleLike,
 } from '../../api/board'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+const getProfileImageUrl = (profileImage) => {
+  if (!profileImage) return null
+  if (profileImage.startsWith('http')) return profileImage
+  if (profileImage.startsWith('/uploads')) return `${BASE_URL}${profileImage}`
+  return `${BASE_URL}/uploads/user/${profileImage}`
+}
+
 const BoardDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -24,7 +33,7 @@ const BoardDetailPage = () => {
   const [comments, setComments] = useState([])
   const [editCommentId, setEditCommentId] = useState(null)
   const [editCommentText, setEditCommentText] = useState('')
-  const [imgModalOpen, setImgModalOpen] = useState(false)  // 단일 이미지 모달
+  const [imgModalOpen, setImgModalOpen] = useState(false)
 
   useEffect(() => {
     getPostById(id).then(data => {
@@ -32,12 +41,14 @@ const BoardDetailPage = () => {
         setPost(data)
         setLikeCount(data.likeCount)
         setLiked(data.liked)
+        // ✅ console.log 제거
       }
     })
 
     getComments(id).then(data => {
       setComments(data || [])
     })
+    // ✅ console.log 2개 제거
   }, [id])
 
   if (!post) return <div className={styles.wrap}>게시글을 찾을 수 없습니다.</div>
@@ -67,9 +78,7 @@ const BoardDetailPage = () => {
       return
     }
     if (!comment.trim()) return
-    const newComment = await createComment(post.postId, {
-      content: comment,
-    })
+    const newComment = await createComment(post.postId, { content: comment })
     setComments(prev => [...prev, newComment])
     setComment('')
   }
@@ -111,8 +120,6 @@ const BoardDetailPage = () => {
         </h2>
 
         <div className={styles.card}>
-
-          {/* 말머리 + 제목 */}
           <div className={styles.postHeader}>
             <span className={`${styles.tag} ${post.category === '잡담' ? styles.tagPink : styles.tagPurple}`}>
               {post.category}
@@ -120,20 +127,18 @@ const BoardDetailPage = () => {
             <h3 className={styles.postTitle}>{post.title}</h3>
           </div>
 
-          {/* 작성자 정보 */}
           <div className={styles.metaRow}>
             <div className={styles.authorInfo}>
               <div className={styles.avatar}>
                 {post.profileImage
                   ? <img
-                      src={post.profileImage}
+                      src={getProfileImageUrl(post.profileImage)}
                       alt="프로필"
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                       onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerText = '🌱' }}
                     />
                   : '🌱'}
               </div>
-
               <span className={styles.nickname}>{post.nickname}</span>
               <span className={styles.date}>{formatDate(post.createdAt)}</span>
               <span className={styles.views}>조회 {post.viewCount}</span>
@@ -158,14 +163,15 @@ const BoardDetailPage = () => {
 
           <div className={styles.divider} />
 
+
           {/* 본문 */}
           <p className={styles.content}>{post.content}</p>
 
-          {/* 첨부 이미지 - 클릭하면 모달 오픈 */}
+          {/* 첨부 이미지 */}
           {post.imageUrl && (
             <div className={styles.imageList}>
               <img
-                src={post.imageUrl}
+                src={`${BASE_URL}${post.imageUrl}`}
                 alt="첨부이미지"
                 className={styles.postImg}
                 style={{ cursor: 'pointer' }}
@@ -173,7 +179,6 @@ const BoardDetailPage = () => {
               />
             </div>
           )}
-
 
           {/* 좋아요 */}
           <div className={styles.likeRow}>
@@ -193,7 +198,16 @@ const BoardDetailPage = () => {
 
             {/* 댓글 입력 */}
             <div className={styles.commentInputRow}>
-              <div className={styles.avatar}>🌱</div>
+              <div className={styles.avatar}>
+                {user?.profileImage
+                  ? <img
+                      src={getProfileImageUrl(user.profileImage)}
+                      alt="프로필"
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                      onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerText = '🌱' }}
+                    />
+                  : '🌱'}
+              </div>
               <input
                 className={styles.commentInput}
                 placeholder="댓글을 입력하세요..."
@@ -217,7 +231,7 @@ const BoardDetailPage = () => {
                 <div className={styles.avatar}>
                   {c.profileImage
                     ? <img
-                        src={c.profileImage}
+                        src={getProfileImageUrl(c.profileImage)}
                         alt="프로필"
                         style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                         onError={(e) => { e.target.style.display = 'none'; e.target.parentNode.innerText = '🌱' }}
@@ -275,7 +289,7 @@ const BoardDetailPage = () => {
             ))}
           </div>
 
-          {/* 이미지 확대 모달 - 단일 imageUrl */}
+          {/* 이미지 확대 모달 */}
           {imgModalOpen && (
             <div
               className={styles.imgModalOverlay}
@@ -292,7 +306,7 @@ const BoardDetailPage = () => {
                   ✕
                 </button>
                 <img
-                  src={post.imageUrl}
+                  src={`${BASE_URL}${post.imageUrl}`}
                   alt="확대 이미지"
                   className={styles.imgModalImg}
                 />

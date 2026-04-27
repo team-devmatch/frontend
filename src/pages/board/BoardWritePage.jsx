@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getPostById, createPost, updatePost } from '../../api/board'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL  // ✅ 추가
+
 const BoardWritePage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -11,9 +13,8 @@ const BoardWritePage = () => {
   const [category, setCategory] = useState('잡담')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [image, setImage] = useState(null) // { file, preview } - 단일 이미지
+  const [image, setImage] = useState(null)
 
-  // 수정 모드일 때 기존 데이터 불러오기
   useEffect(() => {
     if (editId) {
       getPostById(editId).then(data => {
@@ -21,9 +22,8 @@ const BoardWritePage = () => {
           setCategory(data.category)
           setTitle(data.title)
           setContent(data.content)
-          // 기존 이미지 url → preview로 세팅
           if (data.imageUrl) {
-            setImage({ file: null, preview: data.imageUrl })
+            setImage({ file: null, preview: `${BASE_URL}${data.imageUrl}` })  // ✅ 수정
           }
         }
       })
@@ -114,11 +114,10 @@ const BoardWritePage = () => {
             />
           </div>
 
-          {/* 사진 첨부 - 단일 이미지 */}
+          {/* 사진 첨부 */}
           <div className={styles.field}>
             <label className={styles.label}>사진 첨부</label>
 
-            {/* 이미지 없을 때만 업로드 버튼 표시 */}
             {!image && (
               <>
                 <label className={styles.imgUploadBox} htmlFor="imgUpload">
@@ -134,7 +133,6 @@ const BoardWritePage = () => {
               </>
             )}
 
-            {/* 썸네일 미리보기 */}
             {image && (
               <div className={styles.previewList}>
                 <div className={styles.previewItem}>

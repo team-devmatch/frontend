@@ -4,11 +4,19 @@ import { useNavigate } from 'react-router-dom'
 import { getPosts } from '../../api/board'
 
 const LIMIT = 5
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+const getProfileImageUrl = (profileImage) => {
+  if (!profileImage) return null
+  if (profileImage.startsWith('http')) return profileImage
+  if (profileImage.startsWith('/uploads')) return `${BASE_URL}${profileImage}`
+  return `${BASE_URL}/uploads/user/${profileImage}`
+}
 
 const BoardListPage = () => {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('전체')
-  const [allPosts, setAllPosts] = useState([]) // 전체 데이터 보관
+  const [allPosts, setAllPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
@@ -19,14 +27,12 @@ const BoardListPage = () => {
 
   const tabs = ['잡담', '후기']
 
-  // 프론트에서 직접 필터링
   const filteredPosts = activeTab === '전체'
     ? allPosts
     : allPosts.filter(post => post.category === activeTab)
 
   const totalPages = Math.ceil(filteredPosts.length / LIMIT)
 
-  // 현재 페이지 데이터
   const pagedPosts = filteredPosts.slice(
     (currentPage - 1) * LIMIT,
     currentPage * LIMIT
@@ -88,7 +94,7 @@ const BoardListPage = () => {
               <div className={styles.avatar}>
                 {post.profileImage
                   ? <img
-                      src={post.profileImage}
+                      src={getProfileImageUrl(post.profileImage)}  // ✅ 수정
                       alt="프로필"
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                       onError={(e) => {
@@ -98,7 +104,6 @@ const BoardListPage = () => {
                     />
                   : '🌱'}
               </div>
-
 
               {/* 내용 */}
               <div className={styles.postContent}>

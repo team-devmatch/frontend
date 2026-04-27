@@ -1,8 +1,11 @@
 import styles from './MyPage.module.css'
-import { useState, useEffect } from 'react'   // ← useEffect 추가
-import { useNavigate } from 'react-router-dom'  // ← useNavigate 추가
-import { getMe } from '../../api/auth'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getMe, updateProfileImage, resetProfileImage, withdraw } from '../../api/auth'
 import { useAuth } from '../../context/useAuth'
+
+// ✅ 백엔드 주소 상수로 빼두기
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const MyPage = () => {
   const navigate = useNavigate()
@@ -12,18 +15,20 @@ const MyPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [profileImg, setProfileImg] = useState(null)
 
-  // 더미 데이터 → API 연동으로 교체
   const [user, setUser] = useState({
     nickname: '',
     email: '',
   })
 
-  // 페이지 진입 시 내 정보 불러오기
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await getMe()
         setUser(res.data)
+        if (res.data.profileImage) {
+          // ✅ 상대경로 → 절대경로로 변환
+          setProfileImg(`${BASE_URL}${res.data.profileImage}`)
+        }
       } catch (err) {
         console.error(err)
         alert('로그인이 필요합니다.')
@@ -33,29 +38,63 @@ const MyPage = () => {
     fetchUser()
   }, [])
 
-  const handleImgChange = (e) => {
+  // ✅ 프로필 이미지 변경
+  const handleImgChange = async (e) => {
     const file = e.target.files[0]
-    if (file) setProfileImg(URL.createObjectURL(file))
+    if (!file) return
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      await updateProfileImage(formData)
+
+      // ✅ getMe() 다시 호출해서 최신 이미지 URL 받아오기
+      const updated = await getMe()
+      setUser(updated.data)
+      if (updated.data.profileImage) {
+        setProfileImg(`${BASE_URL}${updated.data.profileImage}`)
+      }
+
+      alert('프로필 이미지가 변경되었습니다.')
+    } catch (err) {
+      console.error(err)
+      alert('이미지 변경에 실패했습니다.')
+    }
+  }
+
+  // ✅ 기본 이미지로 변경
+  const handleResetImg = async () => {
+    try {
+      await resetProfileImage()
+      setProfileImg(null)
+      alert('기본 이미지로 변경되었습니다.')
+    } catch (err) {
+      console.error(err)
+      alert('기본 이미지 변경에 실패했습니다.')
+    }
   }
 
   const handlePwChange = async () => {
     if (!currentPw || !newPw) return alert('비밀번호를 입력해주세요.')
-    // TODO: 백엔드 비밀번호 변경 API 연동 시 여기만 교체
     console.log('비밀번호 변경:', currentPw, newPw)
     alert('비밀번호가 변경되었습니다.')
     setCurrentPw('')
     setNewPw('')
   }
 
+  // ✅ 회원 탈퇴
   const handleWithdraw = async () => {
-    // TODO: 백엔드 회원탈퇴 API 연동 시 여기만 교체
-    console.log('회원 탈퇴')
-    logout()   // ✅ AuthProvider가 알아서 삭제해줘요
-    setShowModal(false)
-    navigate('/login')
+    try {
+      await withdraw()
+      logout()
+      setShowModal(false)
+      navigate('/login')
+    } catch (err) {
+      console.error(err)
+      alert('탈퇴 처리 중 오류가 발생했습니다.')
+    }
   }
 
-  // return 부분은 기존과 동일 (변경 없음)
   return (
     <div className={styles.wrap}>
       <div className={styles.card}>
@@ -79,6 +118,13 @@ const MyPage = () => {
                 onChange={handleImgChange}
               />
             </div>
+
+            {profileImg && (
+              <button className={styles.resetImgBtn} onClick={handleResetImg}>
+                기본 이미지로 변경
+              </button>
+            )}
+
             <p className={styles.profileName}>{user.nickname}</p>
             <p className={styles.profileEmail}>{user.email}</p>
           </div>

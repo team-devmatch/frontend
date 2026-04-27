@@ -2,7 +2,7 @@ import styles from './LoginPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import logo from "../../assets/images/logo.svg"
-import { login } from '../../api/auth'
+import { login, getMe } from '../../api/auth'
 import { useAuth } from '../../context/useAuth'
 
 const LoginPage = () => {
@@ -22,14 +22,12 @@ const LoginPage = () => {
         return
       }
 
-      // ✅ 현재 : 토큰 + 임시 닉네임 저장
-      // 🔄 백엔드 연동 후 : 아래 주석으로 교체하세요!
-      // const nickname = res.data.user.nickname  // ← 서버에서 받은 닉네임
-      // authLogin(token, nickname)
+      localStorage.setItem('token', token)
 
-      const nickname = email.split('@')[0]  // ← 임시 닉네임 (이메일 앞부분)
+      const meRes = await getMe()
+      const nickname = meRes.data.nickname
+
       authLogin(token, nickname)
-
       navigate('/')
     } catch (err) {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')

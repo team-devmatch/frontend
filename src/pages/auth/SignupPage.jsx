@@ -2,7 +2,7 @@ import styles from './SignupPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import logo from "../../assets/images/logo.svg"
-import { register } from '../../api/auth'
+import { register, checkEmail, checkNickname } from '../../api/auth'
 import { RULES, MESSAGES } from '../../constants/validation'
 
 // ✅ 정규식 함수 - RULES에서 참조
@@ -83,10 +83,17 @@ const SignupPage = () => {
       setEmailChecked(false)
       return
     }
-    // TODO: 백엔드 연동 시 여기만 교체
-    setEmailChecked(true)
-    setEmailMsg(MESSAGES.email.ok)
+    // ✅ TODO 부분 교체
+    try {
+      await checkEmail(email)
+      setEmailChecked(true)
+      setEmailMsg(MESSAGES.email.ok)
+    } catch (_err) {
+      setEmailChecked(false)
+      setEmailMsg('이미 사용 중인 이메일입니다.')
+    }
   }
+
 
   // ✅ 닉네임 중복 확인
   const handleNicknameCheck = async () => {
@@ -100,10 +107,17 @@ const SignupPage = () => {
       setNicknameChecked(false)
       return
     }
-    // TODO: 백엔드 연동 시 여기만 교체
-    setNicknameChecked(true)
-    setNicknameMsg(MESSAGES.nickname.ok)
+    // ✅ TODO 부분 교체
+    try {
+      await checkNickname(nickname)
+      setNicknameChecked(true)
+      setNicknameMsg(MESSAGES.nickname.ok)
+    } catch (_err) {
+      setNicknameChecked(false)
+      setNicknameMsg('이미 사용 중인 닉네임입니다.')
+    }
   }
+
 
   // ✅ 회원가입 제출
   const handleSignup = async () => {

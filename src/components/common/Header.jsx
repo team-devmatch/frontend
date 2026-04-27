@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const menuList = [
-    { name: "축제행사", path: "/festival" },
+    { name: "축제행사", path: "/festivals" },
     { name: "캘린더", path: "/calendar" },
     { name: "게시판", path: "/board" },
   ];

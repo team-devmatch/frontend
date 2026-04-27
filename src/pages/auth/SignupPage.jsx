@@ -2,10 +2,9 @@ import styles from './SignupPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import logo from "../../assets/images/logo.svg"
-import { register, checkEmail, checkNickname } from '../../api/auth'
+import { register } from '../../api/auth'  // ← checkEmail, checkNickname 제거
 import { RULES, MESSAGES } from '../../constants/validation'
 
-// ✅ 정규식 함수 - RULES에서 참조
 const validateEmail = (email) => RULES.email.test(email)
 const validatePassword = (pw) => RULES.password.test(pw)
 const validateNickname = (nick) => RULES.nickname.test(nick)
@@ -18,12 +17,6 @@ const SignupPage = () => {
   const [nickname, setNickname] = useState('')
   const [profileImg, setProfileImg] = useState(null)
   const [profileImgFile, setProfileImgFile] = useState(null)
-
-  // 중복 확인
-  const [emailChecked, setEmailChecked] = useState(false)
-  const [emailMsg, setEmailMsg] = useState('')
-  const [nicknameChecked, setNicknameChecked] = useState(false)
-  const [nicknameMsg, setNicknameMsg] = useState('')
 
   // 유효성 메시지
   const [emailFormatMsg, setEmailFormatMsg] = useState('')
@@ -38,8 +31,6 @@ const SignupPage = () => {
   const handleEmailChange = (e) => {
     const val = e.target.value
     setEmail(val)
-    setEmailChecked(false)
-    setEmailMsg('')
     if (val && !validateEmail(val)) {
       setEmailFormatMsg(MESSAGES.email.format)
     } else {
@@ -62,8 +53,6 @@ const SignupPage = () => {
   const handleNicknameChange = (e) => {
     const val = e.target.value
     setNickname(val)
-    setNicknameChecked(false)
-    setNicknameMsg('')
     if (val && !validateNickname(val)) {
       setNicknameFormatMsg(MESSAGES.nickname.format)
     } else {
@@ -71,80 +60,34 @@ const SignupPage = () => {
     }
   }
 
-  // ✅ 이메일 중복 확인
-  const handleEmailCheck = async () => {
-    if (!email.trim()) {
-      setEmailMsg(MESSAGES.email.empty)
-      setEmailChecked(false)
-      return
-    }
-    if (!validateEmail(email)) {
-      setEmailMsg(MESSAGES.email.format)
-      setEmailChecked(false)
-      return
-    }
-    // ✅ TODO 부분 교체
-    try {
-      await checkEmail(email)
-      setEmailChecked(true)
-      setEmailMsg(MESSAGES.email.ok)
-    } catch (_err) {
-      setEmailChecked(false)
-      setEmailMsg('이미 사용 중인 이메일입니다.')
-    }
-  }
-
-
-  // ✅ 닉네임 중복 확인
-  const handleNicknameCheck = async () => {
-    if (!nickname.trim()) {
-      setNicknameMsg(MESSAGES.nickname.empty)
-      setNicknameChecked(false)
-      return
-    }
-    if (!validateNickname(nickname)) {
-      setNicknameMsg(MESSAGES.nickname.format)
-      setNicknameChecked(false)
-      return
-    }
-    // ✅ TODO 부분 교체
-    try {
-      await checkNickname(nickname)
-      setNicknameChecked(true)
-      setNicknameMsg(MESSAGES.nickname.ok)
-    } catch (_err) {
-      setNicknameChecked(false)
-      setNicknameMsg('이미 사용 중인 닉네임입니다.')
-    }
-  }
-
-
   // ✅ 회원가입 제출
   const handleSignup = async () => {
     if (!validateEmail(email)) return alert(MESSAGES.email.format)
-    if (!emailChecked) return alert(MESSAGES.email.duplicate)
     if (!validatePassword(password)) return alert(MESSAGES.password.format)
     if (!validateNickname(nickname)) return alert(MESSAGES.nickname.format)
-    if (!nicknameChecked) return alert(MESSAGES.nickname.duplicate)
     if (!passwordMatch) return alert(MESSAGES.password.notMatch)
 
     try {
       const formData = new FormData()
-      formData.append('email', email)
-      formData.append('password', password)
-      formData.append('passwordCheck', passwordCheck)
-      formData.append('nickname', nickname)
       if (profileImgFile) {
-        formData.append('profileImage', profileImgFile)
+        formData.append('file', profileImgFile)
       }
-      await register(formData)
+
+      await register(formData, { email, password, passwordCheck, nickname })
       alert('회원가입이 완료되었습니다!')
       navigate('/login')
+
     } catch (err) {
-      alert('회원가입에 실패했습니다. 다시 시도해주세요.')
+      const detail = err.response?.data?.detail
+      if (detail) {
+        alert(detail)  // ← "이메일이 존재합니다" 그대로 표시
+      } else {
+        alert('회원가입에 실패했습니다. 다시 시도해주세요.')
+      }
       console.error(err)
     }
   }
+
 
   // ✅ 프로필 이미지 변경
   const handleImgChange = (e) => {
@@ -154,7 +97,6 @@ const SignupPage = () => {
       setProfileImgFile(file)
     }
   }
-
 
   return (
     <div className={styles.wrap}>
@@ -186,27 +128,15 @@ const SignupPage = () => {
           {/* 이메일 */}
           <div className={styles.field}>
             <label className={styles.label}>이메일</label>
-            <div className={styles.inputRow}>
-              <input
-                className={styles.input}
-                type="email"
-                placeholder="이메일을 입력하세요"
-                value={email}
-                onChange={handleEmailChange}
-              />
-              <button className={styles.checkBtn} onClick={handleEmailCheck}>
-                중복 확인
-              </button>
-            </div>
-            {/* ✅ 형식 에러 */}
-            {emailFormatMsg && !emailChecked && (
+            <input
+              className={styles.input}
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            {emailFormatMsg && (
               <p className={styles.feedbackErr}>❌ {emailFormatMsg}</p>
-            )}
-            {/* 중복 확인 결과 */}
-            {emailMsg && (
-              <p className={emailChecked ? styles.feedbackOk : styles.feedbackErr}>
-                {emailChecked ? '✅' : '❌'} {emailMsg}
-              </p>
             )}
           </div>
 
@@ -220,7 +150,6 @@ const SignupPage = () => {
               value={password}
               onChange={handlePasswordChange}
             />
-            {/* ✅ 비밀번호 형식 안내 */}
             {passwordMsg && (
               <p className={styles.feedbackErr}>❌ {passwordMsg}</p>
             )}
@@ -247,27 +176,15 @@ const SignupPage = () => {
           {/* 닉네임 */}
           <div className={styles.field}>
             <label className={styles.label}>닉네임</label>
-            <div className={styles.inputRow}>
-              <input
-                className={styles.input}
-                type="text"
-                placeholder="닉네임을 입력하세요"
-                value={nickname}
-                onChange={handleNicknameChange}
-              />
-              <button className={styles.checkBtn} onClick={handleNicknameCheck}>
-                중복 확인
-              </button>
-            </div>
-            {/* ✅ 형식 에러 */}
-            {nicknameFormatMsg && !nicknameChecked && (
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="닉네임을 입력하세요"
+              value={nickname}
+              onChange={handleNicknameChange}
+            />
+            {nicknameFormatMsg && (
               <p className={styles.feedbackErr}>❌ {nicknameFormatMsg}</p>
-            )}
-            {/* 중복 확인 결과 */}
-            {nicknameMsg && (
-              <p className={nicknameChecked ? styles.feedbackOk : styles.feedbackErr}>
-                {nicknameChecked ? '✅' : '❌'} {nicknameMsg}
-              </p>
             )}
           </div>
 

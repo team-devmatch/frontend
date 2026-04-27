@@ -1,34 +1,51 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AuthContext } from './AuthContext'
+import { getMe } from '../api/auth'  // ← 경로 맞게 수정해줘요
 
 export const AuthProvider = ({ children }) => {
 
-  // ✅ 현재 : 토큰 + 닉네임 localStorage에서 불러오기
-  // 🔄 백엔드 연동 후 : const [user, setUser] = useState(null) 로 바꾸고
-  //    앱 시작 시 토큰으로 유저 정보 API 호출해서 불러오기
-  //    예시) GET /api/auth/me → { nickname, email, ... } 받아서 setUser
-  const [user, setUser] = useState(
-    localStorage.getItem('token')
-      ? {
-          token: localStorage.getItem('token'),
-          nickname: localStorage.getItem('nickname') || '사용자'
-        }
-      : null
-  )
+  const [user, setUser] = useState(null)
 
-  // ✅ 현재 : 토큰 + 닉네임 저장
-  // 🔄 백엔드 연동 후 : login(token, userInfo) 형태로 바꾸기
-  //    예시) login(response.data.token, response.data.user)
-  //    userInfo = { nickname: "오충환", email: "...", ... }
+  // ✅ 앱 시작 시 토큰 있으면 getMe() 호출해서 유저 정보 불러오기
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      getMe()
+        .then(res => {
+          setUser({
+            token,
+            nickname: res.data.nickname,
+            email: res.data.email,
+            profileImage: res.data.profileImage  // ✅ 추가!
+          })
+        })
+        .catch(() => {
+          // 토큰 만료 등
+          localStorage.removeItem('token')
+          localStorage.removeItem('nickname')
+          setUser(null)
+        })
+    }
+  }, [])
+
   const login = (token, nickname) => {
     localStorage.setItem('token', token)
     localStorage.setItem('nickname', nickname)
-    setUser({ token, nickname })
+    // ✅ 로그인 후 getMe() 호출해서 profileImage도 저장
+    getMe()
+      .then(res => {
+        setUser({
+          token,
+          nickname: res.data.nickname,
+          email: res.data.email,
+          profileImage: res.data.profileImage  // ✅ 추가!
+        })
+      })
+      .catch(() => {
+        setUser({ token, nickname })
+      })
   }
 
-  // ✅ 현재 : 토큰 + 닉네임 삭제
-  // 🔄 백엔드 연동 후 : 서버에 로그아웃 API 호출 추가
-  //    예시) POST /api/auth/logout 호출 후 localStorage 삭제
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('nickname')

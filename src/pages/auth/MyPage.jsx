@@ -1,15 +1,14 @@
 import styles from './MyPage.module.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getMe, updateProfileImage, resetProfileImage, withdraw } from '../../api/auth'
+import { getMe, updateProfileImage, resetProfileImage, withdraw, updatePassword } from '../../api/auth'
 import { useAuth } from '../../context/useAuth'
 
-// ✅ 백엔드 주소 상수로 빼두기
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const MyPage = () => {
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { logout, setUser: setAuthUser } = useAuth()  // ✅ setUser 추가
   const [currentPw, setCurrentPw] = useState('')
   const [newPw, setNewPw] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -26,7 +25,6 @@ const MyPage = () => {
         const res = await getMe()
         setUser(res.data)
         if (res.data.profileImage) {
-          // ✅ 상대경로 → 절대경로로 변환
           setProfileImg(`${BASE_URL}${res.data.profileImage}`)
         }
       } catch (err) {
@@ -48,13 +46,16 @@ const MyPage = () => {
       formData.append('file', file)
       await updateProfileImage(formData)
 
-      // ✅ getMe() 다시 호출해서 최신 이미지 URL 받아오기
       const updated = await getMe()
       setUser(updated.data)
       if (updated.data.profileImage) {
         setProfileImg(`${BASE_URL}${updated.data.profileImage}`)
+        // ✅ AuthContext user도 업데이트
+        setAuthUser(prev => ({
+          ...prev,
+          profileImage: updated.data.profileImage
+        }))
       }
-
       alert('프로필 이미지가 변경되었습니다.')
     } catch (err) {
       console.error(err)
@@ -66,7 +67,23 @@ const MyPage = () => {
   const handleResetImg = async () => {
     try {
       await resetProfileImage()
-      setProfileImg(null)
+      const updated = await getMe()
+      setUser(updated.data)
+      if (updated.data.profileImage) {
+        setProfileImg(`${BASE_URL}${updated.data.profileImage}`)
+        // ✅ AuthContext user도 업데이트
+        setAuthUser(prev => ({
+          ...prev,
+          profileImage: updated.data.profileImage
+        }))
+      } else {
+        setProfileImg(null)
+        // ✅ AuthContext user도 업데이트
+        setAuthUser(prev => ({
+          ...prev,
+          profileImage: null
+        }))
+      }
       alert('기본 이미지로 변경되었습니다.')
     } catch (err) {
       console.error(err)
@@ -74,12 +91,26 @@ const MyPage = () => {
     }
   }
 
+  // ✅ 비밀번호 변경
   const handlePwChange = async () => {
     if (!currentPw || !newPw) return alert('비밀번호를 입력해주세요.')
-    console.log('비밀번호 변경:', currentPw, newPw)
-    alert('비밀번호가 변경되었습니다.')
-    setCurrentPw('')
-    setNewPw('')
+    try {
+      await updatePassword({
+        currentPassword: currentPw,
+        newPassword: newPw
+      })
+      alert('비밀번호가 변경되었습니다.')
+      setCurrentPw('')
+      setNewPw('')
+    } catch (err) {
+      const detail = err.response?.data?.detail
+      if (detail) {
+        alert(detail)
+      } else {
+        alert('비밀번호 변경에 실패했습니다.')
+      }
+      console.error(err)
+    }
   }
 
   // ✅ 회원 탈퇴
@@ -105,6 +136,7 @@ const MyPage = () => {
           <h3 className={styles.sectionTitle}>내 프로필</h3>
           <div className={styles.profileBox}>
             <div className={styles.avatar}>
+              {/* ✅ 이미지 있으면 이미지, 없으면 이모지 */}
               {profileImg
                 ? <img src={profileImg} alt="프로필" className={styles.avatarImg} />
                 : <span className={styles.avatarDefault}>🌱</span>
@@ -119,11 +151,10 @@ const MyPage = () => {
               />
             </div>
 
-            {profileImg && (
-              <button className={styles.resetImgBtn} onClick={handleResetImg}>
-                기본 이미지로 변경
-              </button>
-            )}
+            {/* ✅ 항상 버튼 표시 */}
+            <button className={styles.resetImgBtn} onClick={handleResetImg}>
+              기본 이미지로 변경
+            </button>
 
             <p className={styles.profileName}>{user.nickname}</p>
             <p className={styles.profileEmail}>{user.email}</p>

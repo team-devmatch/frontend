@@ -49,7 +49,10 @@ const BoardDetailPage = () => {
     })
 
     getComments(id).then(data => {
-      setComments(data || [])
+      const sorted = (data || []).sort((a, b) => 
+        new Date(a.createdAt) - new Date(b.createdAt)
+      )
+      setComments(sorted)
     })
   }, [id])
 

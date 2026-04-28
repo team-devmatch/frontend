@@ -1,0 +1,86 @@
+.page {
+  width: 100%;
+  padding-bottom: 120px;
+  background-color: #fff;
+}
+
+.hero {
+  width: 1600px;
+  max-width: calc(100% - 80px);
+  margin: 0 auto;
+  padding: 150px 0 60px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 32px;
+  color: #111;
+}
+
+.searchBox {
+  width: 720px;
+  max-width: 100%;
+  height: 52px;
+  margin: 0 auto 28px;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  background-color: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.searchBox input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 24px;
+  font-size: 14px;
+}
+
+.searchBox button {
+  width: 120px;
+  height: 100%;
+  border: none;
+  background-color: #4da8e8;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filterBox {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filterBox button {
+  border: 1px solid #d8e6ea;
+  background-color: #fff;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.listSection {
+  width: 1600px;
+  max-width: calc(100% - 80px);
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 42px 28px;
+}
+
+.emptyText {
+  text-align: center;
+  color: #777;
+  font-size: 16px;
+}

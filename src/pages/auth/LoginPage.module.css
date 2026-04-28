@@ -1,0 +1,108 @@
+.wrap {
+  min-height: 100vh;
+  background: #fff;          /* #f8f8f8 → #fff */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 90px;
+}
+
+.card {
+  width: 100%;
+  max-width: 545px;
+  background: #fff;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.cardTop {
+  background: linear-gradient(135deg, #fff8f0, #fff0f5);
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid #f5e8ef;
+}
+
+.logo {
+  height: 48px;
+  width: auto;
+}
+
+.form {
+  padding: 2rem 2.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.input {
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* input focus → 파란색 */
+.input:focus {
+  border-color: var(--primary);
+  background: #fff;
+}
+
+/* 로그인 버튼 → 파란색 */
+.btn {
+  width: 100%;
+  background: var(--primary);   /* 그라데이션 → 파란색 */
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+}
+
+.link {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-top: 0.9rem;
+}
+
+/* 회원가입 링크 → 파란색 */
+.link span {
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.error {
+  font-size: 12px;
+  color: #999;            /* 에러 → 회색 수정 */
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+
+

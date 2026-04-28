@@ -1,0 +1,200 @@
+.wrap {
+  min-height: 100vh;
+  background: #fff;          /* #f8f8f8 → #fff */
+  padding: 2rem 1rem;
+  padding-top: 160px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;           /* 20px → 24px */
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.card {
+  background: #fff;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  padding: 1.75rem;
+  /* box-shadow 제거 */
+}
+
+/* 필드 */
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* 말머리 탭 */
+.tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.tab {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  border-color: #aaa;
+  color: #555;
+}
+
+/* 잡담 선택 → 파란색 */
+.tabActive.tabJabdam {
+  background: #e8f4fd;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 후기 선택 → 초록색 */
+.tabActive.tabHugi {
+  background: #e8f5e9;
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+/* 인풋 */
+.input {
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* input focus → 파란색 */
+.input:focus {
+  border-color: var(--primary);
+  background: #fff;
+}
+
+/* 텍스트에리어 */
+.textarea {
+  width: 100%;
+  height: 160px;
+  background: #fafafa;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 11px 15px;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+  line-height: 1.6;
+}
+
+/* textarea focus → 파란색 */
+.textarea:focus {
+  border-color: var(--primary);
+  background: #fff;
+}
+
+/* 사진 첨부 */
+.imgUploadBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: #fafafa;
+  border: 1.5px dashed #e8e8e8;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* hover → 파란색 */
+.imgUploadBox:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 썸네일 */
+.previewList {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.previewItem {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.previewImg {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.removeBtn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: #e8638c;       /* 핑크 유지 */
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* 등록 버튼 → 파란색 */
+.submitBtn {
+  width: 100%;
+  background: var(--primary);   /* 그라데이션 → 파란색 */
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+
+.submitBtn:hover {
+  background: var(--primary-hover);
+}

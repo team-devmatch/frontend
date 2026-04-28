@@ -100,7 +100,7 @@ const Header = () => {
                     onClick={() => navigate('/mypage')}
                     className={styles.userNickname}
                   >
-                    {user.nickname}님 환영합니다!
+                    {user.nickname}님
                   </span>
                 </li>
                 <li>

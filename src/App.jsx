@@ -25,6 +25,8 @@ import FestivalListPage from "./pages/FestivalListPage";
 import FestivalDetailPage from "./pages/FestivalDetailPage";
 import ApiFestivalDetailPage from "./pages/ApiFestivalDetailPage";
 
+import CalendarPage from "./pages/CalendarPage"; // ✅ 추가!
+
 // 로그인 보호 라우트
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -40,6 +42,9 @@ function App() {
         <Route path="/" element={<IndexPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+
+        {/* 캘린더 */}
+        <Route path="/calendar" element={<CalendarPage />} /> {/* ✅ 추가! */}
 
         {/* 축제 */}
         <Route path="/festivals" element={<FestivalListPage />} />

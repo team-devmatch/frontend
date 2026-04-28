@@ -7,7 +7,7 @@ const ChatBot = () => {
     {
       id: 1,
       type: "ai",
-      text: "안녕하세요!\n 저는 페스티코 AI Guide에요.\n전국 축제 정보를 알려드릴게요.\n무엇이든 물어보세요!",
+      text: "안녕하세요!\n 저는 페스티고 AI Guide에요.\n전국 축제 정보를 알려드릴게요.\n무엇이든 물어보세요!",
       time: getCurrentTime(),
     },
   ]);

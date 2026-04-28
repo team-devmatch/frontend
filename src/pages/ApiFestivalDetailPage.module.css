@@ -1,0 +1,124 @@
+.page {
+  width: 100%;
+  padding: 160px 0 120px;
+  background-color: #fff;
+}
+
+.container {
+  width: 1280px;
+  max-width: calc(100% - 80px);
+  margin: 0 auto;
+}
+
+.titleBox {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.titleBox h1 {
+  font-size: 34px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.titleBox p {
+  font-size: 16px;
+  color: #777;
+}
+
+.topSection {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 56px;
+  align-items: start;
+  margin-bottom: 64px;
+}
+
+.imageBox {
+  width: 100%;
+}
+
+.mainImage {
+  width: 100%;
+  height: 620px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+.detailBox {
+  padding-top: 8px;
+}
+
+.detailBox h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 16px;
+}
+
+.infoTable {
+  border-top: 1px solid #ddd;
+  margin-bottom: 28px;
+}
+
+.infoTable div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  border-bottom: 1px solid #eee;
+  min-height: 64px;
+}
+
+.infoTable strong {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  background-color: #f7f7f7;
+  font-weight: 800;
+  color: #222;
+}
+
+.infoTable span {
+  display: flex;
+  align-items: center;
+  padding: 18px 22px;
+  color: #444;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.9;
+  color: #333;
+  margin-top: 28px;
+}
+
+.mapSection {
+  margin-bottom: 44px;
+}
+
+.mapSection h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #111;
+  padding-bottom: 16px;
+}
+
+.backLink {
+  display: block;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-weight: 700;
+  margin-top: 40px;
+}
+
+.status {
+  padding: 140px 0;
+  text-align: center;
+  font-size: 18px;
+}

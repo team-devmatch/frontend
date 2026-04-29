@@ -17,17 +17,62 @@ const Header = () => {
   ];
 
   // 메인 페이지인지 확인
+
+  const getWeatherEmoji = (icon) => {
+    if (icon.includes("01")) return "☀️"; // 맑음
+    if (icon.includes("02")) return "🌤️"; // 구름 조금
+    if (icon.includes("03")) return "⛅"; // 구름
+    if (icon.includes("04")) return "☁️"; // 흐림
+    if (icon.includes("09")) return "🌧️"; // 소나기
+    if (icon.includes("10")) return "🌦️"; // 비
+    if (icon.includes("11")) return "⛈️"; // 천둥
+    if (icon.includes("13")) return "❄️"; // 눈
+    if (icon.includes("50")) return "🌫️"; // 안개
+
+    return "🌡️";
+  };
+
+  const location = useLocation();
+
   const isMainPage = location.pathname === "/";
 
   const [isVisible, setIsVisible] = useState(true);
   const [isHeroArea, setIsHeroArea] = useState(isMainPage);
+
+
+  const [weather, setWeather] = useState(null);
+
+
   const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=37.5665&lon=126.9780&appid=${API_KEY}&units=metric&lang=kr`,
+        );
+
+        const data = await response.json();
+
+        setWeather({
+          temp: Math.round(data.main.temp),
+          icon: data.weather[0].icon,
+          description: data.weather[0].description,
+        });
+      } catch (error) {
+        console.error("날씨 정보를 불러오지 못했습니다.", error);
+      }
+    };
+
+    fetchWeather();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // 메인 페이지에서만 배너 영역 판단
       if (isMainPage) {
         const heroEndPoint = window.innerHeight - 100;
         setIsHeroArea(currentScrollY < heroEndPoint);
@@ -35,19 +80,16 @@ const Header = () => {
         setIsHeroArea(false);
       }
 
-      // 맨 위 근처에서는 무조건 헤더 보이기
       if (currentScrollY < 80) {
         setIsVisible(true);
         lastScrollY.current = currentScrollY;
         return;
       }
 
-      // 아래로 스크롤하면 숨김
       if (currentScrollY > lastScrollY.current) {
         setIsVisible(false);
       }
 
-      // 위로 스크롤하면 보임
       if (currentScrollY < lastScrollY.current) {
         setIsVisible(true);
       }
@@ -92,6 +134,15 @@ const Header = () => {
 
         {/* 로그인 상태에 따라 다른 UI */}
         <div className={styles.navRight}>
+          {weather && (
+            <div className={styles.weatherBox}>
+              <span className={styles.weatherIcon}>
+                {getWeatherEmoji(weather.icon)}
+              </span>
+              <span>{weather.temp}°C</span>
+            </div>
+          )}
+
           <ul>
             {user ? (
               <>

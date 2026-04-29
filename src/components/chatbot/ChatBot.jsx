@@ -44,7 +44,7 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/ai/chat", {
+      const response = await fetch("http://43.201.101.12:8080/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),

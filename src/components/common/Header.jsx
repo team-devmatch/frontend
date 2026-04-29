@@ -32,8 +32,6 @@ const Header = () => {
     return "🌡️";
   };
 
-  const location = useLocation();
-
   const isMainPage = location.pathname === "/";
 
   const [isVisible, setIsVisible] = useState(true);

@@ -93,3 +93,26 @@
   transform: translateY(-100%);
   opacity: 0;
 }
+
+.weatherBox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  margin-right: 20px;
+
+  font-size: 18px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.weatherBox img {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.weatherIcon {
+  font-size: 22px;
+  line-height: 1;
+}
